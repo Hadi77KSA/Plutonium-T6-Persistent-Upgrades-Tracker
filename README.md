@@ -28,7 +28,7 @@ The following table explains which persistent upgrade each code name stands for,
 | nube | Ray Gun off the Olympia | Obtained by purchasing the Olympia after having increased a "nube kills" counter up to at least 5. The nube kills counter increases upon kills that are not: melee kills, headshot kills, nor kills preceded by a barrier repair; as these actions reset the counter. Additionally, if you have ever completed round 10 or higher on the main modes—including Mob of the Dead and Origins, but not survival nor grief—then the tracker stops increasing, and resets upon the next kill if it is the first time you have completed round 10 or higher. | Lost at the start of every round from round 10 and beyond. |
 
 ## Features and Installation
-1. Navigate to the [Releases page](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/releases) and download the script you desire.
+1. Navigate to the [Releases page]([https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/releases](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/tree/current)) and download the script you desire.
 2. Navigate to where the Plutonium T6 scripts folder for Zombies is located, typically: `%localappdata%\Plutonium\storage\t6\scripts\zm`
 3. Place the downloaded script file into the directory.
 4. In the case you choose to use `pers_upgrades_live_tracker_chat_commands.gsc`, then it's necessary to download [Resxt's chat_commands.gsc scripts](https://github.com/Resxt/Plutonium-T6-Scripts#how-do-i-download-a-script) and place the `chat_commands.gsc` file in `%localappdata%\Plutonium\storage\t6\scripts\`
