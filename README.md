@@ -3,7 +3,7 @@ These scripts add live trackers of BO2 Zombies' Persistent Upgrades (A.K.A. perm
 This is my first experience with GSC modding. So, any feedback and suggestions are appreciated!
 
 The option to display detailed variables is disabled by default, meaning that the script will only show the information regarding whether each upgrade is awarded or not. To enable the detailed variables to be displayed, locate the following line in the script:  
-`self.custom_detailed_variables[ "all_details" ] = `  
+`self.custom_detailed_variables[ "all_details" ] =                    0;`  
 and change the `0` to `1`.
 
 **DISCLAIMER:** beware that not all variables will display if too many are enabled. Having too many variables enabled can also prevent some HUD elements of the game from loading properly, such as progress bars for placing parts.  
@@ -28,9 +28,42 @@ The following table explains which persistent upgrade each code name stands for,
 | nube | Ray Gun off the Olympia | Obtained by purchasing the Olympia after having increased a "nube kills" counter up to at least 5. The nube kills counter increases upon kills that are not: melee kills, headshot kills, nor kills preceded by a barrier repair; as these actions reset the counter. Additionally, if you have ever completed round 10 or higher on the main modes—including Mob of the Dead and Origins, but not survival nor grief—then the tracker stops increasing, and resets upon the next kill if it is the first time you have completed round 10 or higher. | Lost at the start of every round from round 10 and beyond. |
 
 ## Features and Installation
-1. Navigate to the [Releases page](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/releases) and download the script you desire.
+1. Navigate to the [Releases page](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/tree/current) and download the script you desire.
 2. Navigate to where the Plutonium T6 scripts folder for Zombies is located, typically: `%localappdata%\Plutonium\storage\t6\scripts\zm`
 3. Place the downloaded script file into the directory.
+4. In the case you choose to use `pers_upgrades_live_tracker_chat_commands.gsc`, then it's necessary to download [Resxt's chat_commands.gsc scripts](https://github.com/Resxt/Plutonium-T6-Scripts#how-do-i-download-a-script) and place the `chat_commands.gsc` file in `%localappdata%\Plutonium\storage\t6\scripts\`
 
 ### pers_upgrades_live_tracker.gsc
 The basic tracking script. It can be modified to show additional trackers by changing some values in the files, though the basic information of whether each upgrade is awarded or not should work with no need for further modification.
+
+### pers_upgrades_live_tracker_chat_commands.gsc
+Utilises [Resxt's chat commands scripts](https://github.com/Resxt/Plutonium-T6-Scripts/tree/main/chat_commands) to add the options of enabling and disabling either specific detailed trackers, all of them, and the complete tracking HUD.
+
+Commands:
+| Command | Description | Syntax | Example |
+| :------ | :---------- | :----- | :------ |
+| !trackerhud | Enables/disables the tracking HUD | `!trackerhud <toggle>` | !trackerhud 0 |
+| !trackerhuddetails | Enables/disables detailed trackers | `!trackerhuddetails <variable> <toggle>` | !trackerhuddetails all_details 1 |
+
+Accepted values:
+  
+`<toggle>`:
+- To turn on: `1` or `on`
+- To turn off: `0` or `off`
+  
+`<variable>`:
+- `all_details`
+- `board_details`
+- `revive_details`
+- `multikill_headshots_details`
+- `cash_back_details`
+- `insta_kill_details`
+- `jugg_details`
+- `carpenter_details`
+- `flopper_details`
+- `perk_lose_details`
+- `pistol_points_details`
+- `double_points_details`
+- `sniper_details`
+- `box_weapon_details`
+- `nube_details`
