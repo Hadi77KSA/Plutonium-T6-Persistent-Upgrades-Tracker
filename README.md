@@ -42,8 +42,8 @@ Utilises [Resxt's chat commands scripts](https://github.com/Resxt/Plutonium-T6-S
 Commands:
 | Command | Description | Syntax | Example |
 | :------ | :---------- | :----- | :------ |
-| !trackerhud | Enables/disables the tracking HUD | !trackerhud <toggle> | !trackerhud 0 |
-| !trackerhuddetails | Enables/disables detailed trackers | !trackerhuddetails <variable> <toggle> | !trackerhuddetails all_details 1 |
+| !trackerhud | Enables/disables the tracking HUD | `!trackerhud <toggle>` | !trackerhud 0 |
+| !trackerhuddetails | Enables/disables detailed trackers | `!trackerhuddetails <variable> <toggle>` | !trackerhuddetails all_details 1 |
 
 Accepted values:
   
