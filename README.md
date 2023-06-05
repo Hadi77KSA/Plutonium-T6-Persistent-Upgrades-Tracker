@@ -35,13 +35,13 @@ The following table explains which persistent upgrade each code name stands for,
 1. Navigate to the [Releases page](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/releases/latest) and download the script you desire.
 2. Navigate to where the Plutonium T6 scripts folder for Zombies is located, typically: `%localappdata%\Plutonium\storage\t6\scripts\zm`
 3. Place the downloaded script file into the directory.
-4. In the case you choose to use `pers_upgrades_live_tracker_chat_commands.gsc`, then it's necessary to download [Resxt's chat_commands.gsc scripts](https://github.com/Resxt/Plutonium-T6-Scripts#how-do-i-download-a-script) and place the `chat_commands.gsc` file in `%localappdata%\Plutonium\storage\t6\scripts\`
+4. In the case you choose to use `pers_upgrades_live_tracker_chat_commands.gsc`, then it's necessary to download [Resxt's chat_commands.gsc script](https://github.com/Resxt/Plutonium-T6-Scripts#how-do-i-download-a-script) and place the `chat_commands.gsc` file in `%localappdata%\Plutonium\storage\t6\scripts\`
 
 ### pers_upgrades_live_tracker.gsc
 The basic tracking script. It can be modified to show additional trackers by changing some values in the files, though the basic information of whether each upgrade is awarded or not should work with no need for further modification.
 
 ### pers_upgrades_live_tracker_chat_commands.gsc
-Utilises [Resxt's chat commands scripts](https://github.com/Resxt/Plutonium-T6-Scripts/tree/main/chat_commands) to add the options of enabling and disabling either specific detailed trackers, all of them, and the complete tracking HUD.
+Utilises [Resxt's chat commands scripts](https://github.com/Resxt/Plutonium-T6-Scripts/tree/main/chat_commands) to give the ability of enabling and disabling—individual detailed trackers, all the detailed trackers, and the whole tracking HUD—while in-game.
 
 Commands:
 | Command | Description | Syntax | Example |
@@ -71,3 +71,6 @@ Accepted values:
 - `sniper_details`
 - `box_weapon_details`
 - `nube_details`
+
+## Credits
+- [Resxt](https://github.com/Resxt) with the `chat_commands.gsc` script for making `pers_upgrades_live_tracker_chat_commands.gsc` possible.
