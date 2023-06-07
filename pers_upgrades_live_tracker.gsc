@@ -11,9 +11,9 @@ onPlayerConnect()
 	while( 1 )
 	{
 		level waittill( "connected", player );
-        player init_detailed_variables_toggles();
-        player thread onPlayerSpawned();
-        player thread pers_upgrades_tracker_hud();
+		player init_detailed_variables_toggles();
+		player thread onPlayerSpawned();
+		player thread pers_upgrades_tracker_hud();
 	}
 }
 
