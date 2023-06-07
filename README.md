@@ -1,10 +1,10 @@
 # Plutonium-T6-Persistent-Upgrades-Tracker
-These scripts add live trackers of BO2 Zombies' Persistent Upgrades (A.K.A. permanent perks, permaperks, or perma perks) to be displayed on the HUD for the Plutonium client.  
+These scripts add live trackers of BO2 Zombies' Persistent Upgrades (A.K.A. persistent perks, permanent perks, permaperks, or perma perks) to be displayed on the HUD for the Plutonium client.  
 This is my first experience with GSC modding. So, any feedback and suggestions are appreciated!
 
-![20230607101955_1](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/assets/135042368/87fb8f5c-c28e-4208-9142-cb488e3bd91b)
-![20230607102139_1](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/assets/135042368/2402aa07-4d87-48de-b97e-42c11105a117)
-![20230607102925_1](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/assets/135042368/6598be31-968d-489a-8c14-c6f6380c68ab)
+![20230607101955_1](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/assets/135042368/f09b8930-616e-4399-9cac-dfdfafb2d85d)
+![20230607102139_1](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/assets/135042368/ef05dd97-b468-49eb-8d07-c83bb0b42695)
+![20230607102925_1](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/assets/135042368/ca6c23db-881c-41a5-8594-9ad733547c2e)
 
 The option to display detailed variables is disabled by default, meaning that the script will only show the information regarding whether each upgrade is awarded or not. To enable the detailed variables to be displayed, locate the following line in the script:  
 `self.custom_detailed_variables[ "all_details" ] =                    0;`  
