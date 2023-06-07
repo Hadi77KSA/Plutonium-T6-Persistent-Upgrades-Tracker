@@ -1,6 +1,5 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes_zm\_hud_util;
-#include maps\mp\zombies\_zm_pers_upgrades_functions;
 
 init()
 {
@@ -13,6 +12,7 @@ onPlayerConnect()
 	{
 		level waittill( "connected", player );
         player init_detailed_variables_toggles();
+        player thread onPlayerSpawned();
         player thread pers_upgrades_tracker_hud();
 	}
 }
@@ -40,6 +40,17 @@ init_detailed_variables_toggles()
     self.custom_detailed_variables[ "box_weapon_details" ] =             1;     //1 detailed variable(s)
     self.custom_detailed_variables[ "nube_details" ] =                   1;     //2 detailed variable(s)
     return;
+}
+
+onPlayerSpawned()
+{
+    self endon( "disconnect" );
+    level endon( "end_game" );
+    for(;;)
+    {
+        self waittill( "spawned_player" );
+        self iPrintLn( "^2Persistent Upgrades Tracker ^5mod loaded by ^6Hadi77KSA" );
+    }
 }
 
 pers_upgrades_tracker_hud()
@@ -124,8 +135,8 @@ pers_upgrades_tracker_hud()
             }
             if( toggled_variables[ "nube_details" ] )
             {
-                stats_array[ "nube" ][ "Maximum round completed stat" ] = self.pers[ "pers_max_round_reached" ] + "/" + level.pers_nube_lose_round;
-                stats_array[ "nube" ][ "Nube kills stat" ] = custom_check_value_func( self.pers_num_nube_kills ) + "/" + level.pers_numb_num_kills_unlock;
+                stats_array[ "nube" ][ "Maximum round completed stat" ] = self.pers[ "pers_max_round_reached" ] + " < " + level.pers_nube_lose_round;
+                stats_array[ "nube" ][ "Nube kills stat" ] = custom_check_value_func( self.pers_num_nube_kills ) + " >= " + level.pers_numb_num_kills_unlock;
             }
         }
         
@@ -167,26 +178,26 @@ custom_check_value_func( variable )
 custom_hud_init( array )
 {
     huds = [];
-    relativePoint = undefined;
-    xoffset = 0;
-    yoffset = 0;
+    point = "TOP_LEFT";
+    relativePoint = "TOP_LEFT";
+    yoffset = -20;
     keys = getArrayKeys( array );
     for( key_index = keys.size - 1; key_index >= 0 ; key_index-- )
     {
         key = keys[ key_index ];
         if( isSubStr( key, "awarded" ) )
         {
-            if( yoffset >= 270 )
+            if( yoffset >= 123 && relativePoint != "TOP_RIGHT" )
             {
+                point = "TOP_RIGHT";
                 relativePoint = "TOP_RIGHT";
-                xoffset = -180;
-                yoffset = 0;
+                yoffset = -20;
             }
             huds[ key ] = self createfontstring( "small", 1.2 );
-            huds[ key ] setpoint( "TOP_LEFT", relativePoint, xoffset, yoffset );
+            huds[ key ] setpoint( point, relativePoint, 0, yoffset );
             huds[ key ].hidewheninmenu = 1;
 
-            yoffset += 15;
+            yoffset += 13;
             
         }
         else //if( isSubStr( key, "stats:" ) )
@@ -196,10 +207,10 @@ custom_hud_init( array )
             {
                 sub_key = sub_keys[ sub_key_index ];
                 huds[ sub_key ] = self createfontstring( "small", 1 );
-                huds[ sub_key ] setpoint( "TOP_LEFT", relativePoint, xoffset, yoffset );
+                huds[ sub_key ] setpoint( point, relativePoint, 0, yoffset );
                 huds[ sub_key ].hidewheninmenu = 1;
                 
-                yoffset += 15;
+                yoffset += 11;
             }
         }
     }
