@@ -20,25 +20,25 @@ onPlayerConnect()
 init_detailed_variables_toggles()
 {
 	self.custom_detailed_variables = [];
-	self.custom_detailed_variables[ "all_details" ] =			0;//change this to 1 to display additional variables, change to 0 to hide.
-										//due to limitations, some variables may not display even if enabled.
-										//on Buried, it's possible to load up to 29 variables.
-										//total variables = 31. detailed = 17.
+	self.custom_detailed_variables[ "all_details" ] =			0;	//change this to 1 to display additional variables, change to 0 to hide.
+											//due to limitations, some variables may not display even if enabled.
+											//on Buried, it's possible to load up to 29 variables.
+											//total variables = 31. detailed = 17.
 
-	self.custom_detailed_variables[ "board_details" ] =			1;//1 detailed variable(s)
-	self.custom_detailed_variables[ "revive_details" ] =			1;//1 detailed variable(s)
-	self.custom_detailed_variables[ "multikill_headshots_details" ] =	1;//2 detailed variable(s)
-	self.custom_detailed_variables[ "cash_back_details" ] =			1;//2 detailed variable(s)
-	self.custom_detailed_variables[ "insta_kill_details" ] =		1;//1 detailed variable(s)
-	self.custom_detailed_variables[ "jugg_details" ] =			1;//1 detailed variable(s)
-	self.custom_detailed_variables[ "carpenter_details" ] =			0;//0 detailed variable(s)
-	self.custom_detailed_variables[ "flopper_details" ] =			1;//1 detailed variable(s)
-	self.custom_detailed_variables[ "perk_lose_details" ] =			1;//2 detailed variable(s)
-	self.custom_detailed_variables[ "pistol_points_details" ] =		1;//1 detailed variable(s)
-	self.custom_detailed_variables[ "double_points_details" ] =		0;//0 detailed variable(s)
-	self.custom_detailed_variables[ "sniper_details" ] =			1;//2 detailed variable(s)
-	self.custom_detailed_variables[ "box_weapon_details" ] =		1;//1 detailed variable(s)
-	self.custom_detailed_variables[ "nube_details" ] =			1;//2 detailed variable(s)
+	self.custom_detailed_variables[ "board_details" ] =			1;	//1 detailed variable(s)
+	self.custom_detailed_variables[ "revive_details" ] =			1;	//1 detailed variable(s)
+	self.custom_detailed_variables[ "multikill_headshots_details" ] =	1;	//2 detailed variable(s)
+	self.custom_detailed_variables[ "cash_back_details" ] =			1;	//2 detailed variable(s)
+	self.custom_detailed_variables[ "insta_kill_details" ] =		1;	//1 detailed variable(s)
+	self.custom_detailed_variables[ "jugg_details" ] =			1;	//1 detailed variable(s)
+	self.custom_detailed_variables[ "carpenter_details" ] =			0;	//0 detailed variable(s)
+	self.custom_detailed_variables[ "flopper_details" ] =			1;	//1 detailed variable(s)
+	self.custom_detailed_variables[ "perk_lose_details" ] =			1;	//2 detailed variable(s)
+	self.custom_detailed_variables[ "pistol_points_details" ] =		1;	//1 detailed variable(s)
+	self.custom_detailed_variables[ "double_points_details" ] =		0;	//0 detailed variable(s)
+	self.custom_detailed_variables[ "sniper_details" ] =			1;	//2 detailed variable(s)
+	self.custom_detailed_variables[ "box_weapon_details" ] =		1;	//1 detailed variable(s)
+	self.custom_detailed_variables[ "nube_details" ] =			1;	//2 detailed variable(s)
 	return;
 }
 
