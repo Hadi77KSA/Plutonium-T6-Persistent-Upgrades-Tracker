@@ -88,38 +88,38 @@ pers_upgrades_tracker_hud()
         {
             if( toggled_variables[ "board_details" ] )
             {
-                stats_array[ "board" ][ "Boards stat to obtain" ] = self.pers[ "pers_boarding" ] + "/" + level.pers_boarding_number_of_boards_required;
+                stats_array[ "board" ][ "Boards stat to obtain" ] = self.pers[ "pers_boarding" ];
             }
             if( toggled_variables[ "revive_details" ] )
             {
-                stats_array[ "revive" ][ "Revives stat to obtain" ] = self.pers[ "pers_revivenoperk" ] + "/" + level.pers_revivenoperk_number_of_revives_required;
+                stats_array[ "revive" ][ "Revives stat to obtain" ] = self.pers[ "pers_revivenoperk" ];
             }
             if( toggled_variables[ "multikill_headshots_details" ] )
             {
-                stats_array[ "multikill_headshots" ][ "Multi-kill collateral headshots stat to obtain" ] = self.pers[ "pers_multikill_headshots" ] + "/" + level.pers_multikill_headshots_required;
-                stats_array[ "multikill_headshots" ][ "Non-headshots stat to lose" ] = self.non_headshot_kill_counter + "/" + level.pers_multikill_headshots_upgrade_reset_counter;
+                stats_array[ "multikill_headshots" ][ "Multi-kill collateral headshots stat to obtain" ] = self.pers[ "pers_multikill_headshots" ];
+                stats_array[ "multikill_headshots" ][ "Non-headshots stat to lose" ] = self.non_headshot_kill_counter;
             }
             if( toggled_variables[ "cash_back_details" ] )
             {
-                stats_array[ "cash_back" ][ "Perk purchases stat to obtain" ] = self.pers[ "pers_cash_back_bought" ] + "/" + level.pers_cash_back_num_perks_required;
-                stats_array[ "cash_back" ][ "Perk purchases followed by prone stat to obtain" ] = self.pers[ "pers_cash_back_prone" ] + "/" + level.pers_cash_back_perk_buys_prone_required;
+                stats_array[ "cash_back" ][ "Perk purchases stat to obtain" ] = self.pers[ "pers_cash_back_bought" ];
+                stats_array[ "cash_back" ][ "Perk purchases followed by prone stat to obtain" ] = self.pers[ "pers_cash_back_prone" ];
             }
             if( toggled_variables[ "insta_kill_details" ] )
             {
-                stats_array[ "insta_kill" ][ "No-kill insta-kills stat to obtain" ] = self.pers[ "pers_insta_kill" ] + "/" + level.pers_insta_kill_num_required;
+                stats_array[ "insta_kill" ][ "No-kill insta-kills stat to obtain" ] = self.pers[ "pers_insta_kill" ];
             }
             if( toggled_variables[ "jugg_details" ] )
             {
-                stats_array[ "jugg" ][ "Low-round deaths stat to obtain" ] = self.pers[ "pers_jugg" ] + "/" + level.pers_jugg_hit_and_die_total;
+                stats_array[ "jugg" ][ "Low-round deaths stat to obtain" ] = self.pers[ "pers_jugg" ];
             }
             if( toggled_variables[ "flopper_details" ] )
             {
-                stats_array[ "flopper" ][ "Falls stat to obtain" ] = custom_check_value_func( self.pers_num_flopper_damages ) + "/" + level.pers_flopper_damage_counter;
+                stats_array[ "flopper" ][ "Falls stat to obtain" ] = custom_check_value_func( self.pers_num_flopper_damages );
             }
             if( toggled_variables[ "perk_lose_details" ] )
             {
-                stats_array[ "perk_lose" ][ "Low-round 4-perk games stat to obtain" ] = self.pers[ "pers_perk_lose_counter" ] + "/" + level.pers_perk_lose_counter;
-                if( isDefined( self.pers_perk_lose_start_round ) && ( self.pers_perk_lose_start_round != 1 ) && !pers_perk_lose_round_stat_set )
+                stats_array[ "perk_lose" ][ "Low-round 4-perk games stat to obtain" ] = self.pers[ "pers_perk_lose_counter" ];
+                if( isDefined( self.pers_perk_lose_start_round ) && self.pers_perk_lose_start_round != 1 && !pers_perk_lose_round_stat_set )
                 {
                     stats_array[ "perk_lose" ][ "Lost if perk purchased on round" ] = self.pers_perk_lose_start_round;
                     pers_perk_lose_round_stat_set = 1;
@@ -131,21 +131,21 @@ pers_upgrades_tracker_hud()
             }
             if( toggled_variables[ "pistol_points_details" ] )
             {
-                stats_array[ "pistol_points" ][ "Accuracy stat" ] = self maps\mp\zombies\_zm_pers_upgrades_functions::pers_get_player_accuracy() + " <= " + level.pers_pistol_points_accuracy;
+                stats_array[ "pistol_points" ][ "Accuracy stat" ] = self maps\mp\zombies\_zm_pers_upgrades_functions::pers_get_player_accuracy();
             }
             if( toggled_variables[ "sniper_details" ] )
             {
-                stats_array[ "sniper" ][ "Long-range sniper round kills stat to obtain" ] = custom_check_value_func( self.pers_sniper_kills ) + "/" + level.pers_sniper_round_kills_counter;
-                stats_array[ "sniper" ][ "Sniper misses stat to lose" ] = custom_check_value_func( self.num_sniper_misses ) + "/" + level.pers_sniper_misses;
+                stats_array[ "sniper" ][ "Long-range sniper round kills stat to obtain" ] = custom_check_value_func( self.pers_sniper_kills );
+                stats_array[ "sniper" ][ "Sniper misses stat to lose" ] = custom_check_value_func( self.num_sniper_misses );
             }
             if( toggled_variables[ "box_weapon_details" ] )
             {
-                stats_array[ "box_weapon" ][ "Weapons accepted in a row stat to obtain" ] = self.pers[ "pers_box_weapon_counter" ] + "/" + level.pers_box_weapon_counter;
+                stats_array[ "box_weapon" ][ "Weapons accepted in a row stat to obtain" ] = self.pers[ "pers_box_weapon_counter" ];
             }
             if( toggled_variables[ "nube_details" ] )
             {
-                stats_array[ "nube" ][ "Maximum round completed stat" ] = self.pers[ "pers_max_round_reached" ] + " < " + level.pers_nube_lose_round;
-                stats_array[ "nube" ][ "Nube kills stat" ] = custom_check_value_func( self.pers_num_nube_kills ) + " >= " + level.pers_numb_num_kills_unlock;
+                stats_array[ "nube" ][ "Maximum round completed stat" ] = self.pers[ "pers_max_round_reached" ];
+                stats_array[ "nube" ][ "Nube kills stat" ] = self.pers_num_nube_kills;
             }
         }
 
@@ -206,9 +206,68 @@ custom_hud_init( array )
             huds[ key ] = self createfontstring( "small", 1.2 );
             huds[ key ] setpoint( point, relativePoint, 0, yoffset );
             huds[ key ].hidewheninmenu = 1;
+            switch( getSubStr( key, 2, key.size - 8 ) )
+            {
+                case "board":
+                    huds[ key ].label = &"^2board awarded: ";
+                    break;
 
+                case "revive":
+                    huds[ key ].label = &"^2revive awarded: ";
+                    break;
+
+                case "multikill_headshots":
+                    huds[ key ].label = &"^2multikill_headshots awarded: ";
+                    break;
+
+                case "cash_back":
+                    huds[ key ].label = &"^2cash_back awarded: ";
+                    break;
+
+                case "insta_kill":
+                    huds[ key ].label = &"^2insta_kill awarded: ";
+                    break;
+
+                case "jugg":
+                    huds[ key ].label = &"^2jugg awarded: ";
+                    break;
+
+                case "carpenter":
+                    huds[ key ].label = &"^2carpenter awarded: ";
+                    break;
+
+                case "flopper":
+                    huds[ key ].label = &"^2flopper awarded: ";
+                    break;
+
+                case "perk_lose":
+                    huds[ key ].label = &"^2perk_lose awarded: ";
+                    break;
+
+                case "pistol_points":
+                    huds[ key ].label = &"^2pistol_points awarded: ";
+                    break;
+
+                case "double_points":
+                    huds[ key ].label = &"^2double_points awarded: ";
+                    break;
+
+                case "sniper":
+                    huds[ key ].label = &"^2sniper awarded: ";
+                    break;
+
+                case "box_weapon":
+                    huds[ key ].label = &"^2box_weapon awarded: ";
+                    break;
+
+                case "nube":
+                    huds[ key ].label = &"^2nube awarded: ";
+                    break;
+
+                default:
+                    huds[ key ].label = &"^2unknown awarded: ";
+            }
             yoffset += 13;
-
         }
         else //if( isSubStr( key, "stats:" ) )
         {
@@ -219,7 +278,75 @@ custom_hud_init( array )
                 huds[ sub_key ] = self createfontstring( "small", 1 );
                 huds[ sub_key ] setpoint( point, relativePoint, 0, yoffset );
                 huds[ sub_key ].hidewheninmenu = 1;
+                switch( sub_key )
+                {
+                    //board
+                    case "Boards stat to obtain":
+                        huds[ sub_key ].label = &"Boards stat to obtain: ";
+                        break;
+                    //revive
+                    case "Revives stat to obtain":
+                        huds[ sub_key ].label = &"Revives stat to obtain: ";
+                        break;
+                    //multikill_headshots
+                    case "Multi-kill collateral headshots stat to obtain":
+                        huds[ sub_key ].label = &"Multi-kill collateral headshots stat to obtain: ";
+                        break;
+                    case "Non-headshots stat to lose":
+                        huds[ sub_key ].label = &"Non-headshots stat to lose: ";
+                        break;
+                    //cash_back
+                    case "Perk purchases stat to obtain":
+                        huds[ sub_key ].label = &"Perk purchases stat to obtain: ";
+                        break;
+                    case "Perk purchases followed by prone stat to obtain":
+                        huds[ sub_key ].label = &"Perk purchases followed by prone stat to obtain: ";
+                        break;
+                    //insta_kill
+                    case "No-kill insta-kills stat to obtain":
+                        huds[ sub_key ].label = &"No-kill insta-kills stat to obtain: ";
+                        break;
+                    //jugg
+                    case "Low-round deaths stat to obtain":
+                        huds[ sub_key ].label = &"Low-round deaths stat to obtain: ";
+                        break;
+                    //flopper
+                    case "Falls stat to obtain":
+                        huds[ sub_key ].label = &"Falls stat to obtain: ";
+                        break;
+                    //perk_lose
+                    case "Low-round 4-perk games stat to obtain":
+                        huds[ sub_key ].label = &"Low-round 4-perk games stat to obtain: ";
+                        break;
+                    case "Lost if perk purchased on round":
+                        huds[ sub_key ].label = &"Lost if perk purchased on round: ";
+                        break;
+                    //pistol_points
+                    case "Accuracy stat":
+                        huds[ sub_key ].label = &"Accuracy stat: ";
+                        break;
+                    //sniper
+                    case "Long-range sniper round kills stat to obtain":
+                        huds[ sub_key ].label = &"Long-range sniper round kills stat to obtain: ";
+                        break;
+                    case "Sniper misses stat to lose":
+                        huds[ sub_key ].label = &"Sniper misses stat to lose: ";
+                        break;
+                    //box_weapon
+                    case "Weapons accepted in a row stat to obtain":
+                        huds[ sub_key ].label = &"Weapons accepted in a row stat to obtain: ";
+                        break;
+                    //nube
+                    case "Maximum round completed stat":
+                        huds[ sub_key ].label = &"Maximum round completed stat: ";
+                        break;
+                    case "Nube kills stat":
+                        huds[ sub_key ].label = &"Nube kills stat: ";
+                        break;
 
+                    default:
+                        huds[ sub_key ].label = &"unknown stat: ";
+                }
                 yoffset += 11;
             }
         }
@@ -233,13 +360,13 @@ update_custom_hud( array )
     {
         if( isSubStr( key, "awarded" ) )
         {
-            self[ key ] setText( key + ": " + array[ key ] );
+            self[ key ] setValue( array[ key ] );
         }
         else //if( isSubStr( key, "stats:" ) )
         {
             foreach( sub_key in getArrayKeys( array[ key ] ) )
             {
-                self[ sub_key ] setText( sub_key + ": " + array[ key ][ sub_key ] );
+                self[ sub_key ] setValue( array[ key ][ sub_key ] );
             }
         }
     }
