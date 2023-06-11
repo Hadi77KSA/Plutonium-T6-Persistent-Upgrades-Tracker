@@ -3,8 +3,8 @@ These scripts add live trackers of BO2 Zombies' Persistent Upgrades (A.K.A. pers
 This is my first experience with GSC modding. So, any feedback and suggestions are appreciated!
 
 ![20230607101955_1](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/assets/135042368/f09b8930-616e-4399-9cac-dfdfafb2d85d)
-![20230607102139_1](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/assets/135042368/ef05dd97-b468-49eb-8d07-c83bb0b42695)
-![20230607102925_1](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/assets/135042368/ca6c23db-881c-41a5-8594-9ad733547c2e)
+![20230611175353_1](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/assets/135042368/825142b7-533d-4e0f-8b1e-845931b8fb5b)
+![20230611175852_1](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/assets/135042368/d305f74e-6395-4be9-80d6-8d7721fe0131)
 
 The option to display detailed variables is disabled by default, meaning that the script will only show the information regarding whether each upgrade is awarded or not. To enable the detailed variables to be displayed, locate the following line in the script:  
 `self.custom_detailed_variables[ "all_details" ] =                    0;`  
