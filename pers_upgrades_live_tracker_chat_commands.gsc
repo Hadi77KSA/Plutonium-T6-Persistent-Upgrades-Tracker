@@ -373,20 +373,6 @@ update_custom_hud( array )
     return;
 }
 
-custom_is_in_array( variable_to_check, array )
-{
-    is_in_array = 0;
-    foreach( elem in array )
-    {
-        if( variable_to_check == elem )
-        {
-            is_in_array = 1;
-            break;
-        }
-    }
-    return is_in_array;
-}
-
 tracker_hud_toggle_off_watcher( hud )
 {
     self waittill( "custom_tracker_hud_toggle_off" );
@@ -432,23 +418,26 @@ tracker_hud_command(args)
 
 toggle_tracker_hud( toggle )
 {
-    if( !custom_is_in_array( toLower( toggle ), array( "1", "on", "0", "off" ) ) )
+    if( !isinarray( array( "1", "on", "0", "off" ), toLower( toggle ) ) )
     {
-        return array( "Invalid input", GetDvar("cc_prefix") + "trackerhud" + " only accepts:", "'1' or 'on' to enable", "'0' or 'off' to disable" );
+        error = array( "Invalid input", GetDvar("cc_prefix") + "trackerhud" + " only accepts:", "'1' or 'on' to enable", "'0' or 'off' to disable" );
+        return error;
     }
-    else if( custom_is_in_array( toLower( toggle ), array( "0", "off" ) ) )
+    else if( isinarray( array( "0", "off" ), toLower( toggle ) ) )
     {
         if( !is_true( self.pers_upgrades_tracker_hud_running ) )
         {
-            return array( "Error:", GetDvar("cc_prefix") + "trackerhud" + " is already off" );
+            error = array( "Error:", GetDvar("cc_prefix") + "trackerhud" + " is already off" );
+            return error;
         }
         self notify( "custom_tracker_hud_toggle_off" );
     }
-    else //if( custom_is_in_array( toLower( toggle ), array( "1", "on" ) )
+    else //if( isinarray( array( "1", "on" ), toLower( toggle ) )
     {
         if( is_true( self.pers_upgrades_tracker_hud_running ) )
         {
-            return array( "Error:", GetDvar("cc_prefix") + "trackerhud" + " is already on" );
+            error = array( "Error:", GetDvar("cc_prefix") + "trackerhud" + " is already on" );
+            return error;
         }
         self thread pers_upgrades_tracker_hud();
     }
@@ -471,18 +460,18 @@ tracker_hud_details_command(args)
 
 toggle_tracker_hud_details( variable_to_toggle, toggle )
 {
-    if( !custom_is_in_array( toLower( variable_to_toggle ), getArrayKeys( self.custom_detailed_variables ) ) )
+    if( !isinarray( getArrayKeys( self.custom_detailed_variables ), toLower( variable_to_toggle ) ) )
     {
         error = array( "Invalid input", GetDvar("cc_prefix") + "trackerhuddetails" + " could not find " + toLower( variable_to_toggle ) );
         return error;
     }
 
-    if( !custom_is_in_array( toLower( toggle ), array( "1", "on", "0", "off" ) ) )
+    if( !isinarray( array( "1", "on", "0", "off" ), toLower( toggle ) ) )
     {
         error = array( "Invalid input", GetDvar("cc_prefix") + "trackerhuddetails" + " " + toLower( variable_to_toggle ) + " only accepts:", "'1' or 'on' to enable", "'0' or 'off' to disable" );
         return error;
     }
-    else if( custom_is_in_array( toLower( toggle ), array( "0", "off" ) ) )
+    else if( isinarray( array( "0", "off" ), toLower( toggle ) ) )
     {
         if( self.custom_detailed_variables[ variable_to_toggle ] == 0 )
         {
@@ -494,11 +483,11 @@ toggle_tracker_hud_details( variable_to_toggle, toggle )
         wait 0.05;
         self thread pers_upgrades_tracker_hud();
     }
-    else //if( custom_is_in_array( toLower( toggle ), array( "1", "on" ) )
+    else //if( isinarray( array( "1", "on" ), toLower( toggle ) )
     {
         if( self.custom_detailed_variables[ variable_to_toggle ] == 1 )
         {
-            error = array( "Error:", variable_to_toggle +" is already on" );
+            error = array( "Error:", variable_to_toggle + " is already on" );
             return error;
         }
         self.custom_detailed_variables[ variable_to_toggle ] = 1;
