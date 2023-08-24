@@ -15,8 +15,8 @@ onPlayerConnect()
     {
         level waittill( "connected", player );
         player init_detailed_variables_toggles();
-        player thread onPlayerSpawned();
         player thread pers_upgrades_tracker_hud();
+        player iPrintLn( "^2Persistent Upgrades Tracker ^5mod loaded by ^6Hadi77KSA" );
     }
 }
 
@@ -42,18 +42,6 @@ init_detailed_variables_toggles()
     self.custom_detailed_variables[ "sniper_details" ] =                1;  //2 detailed variable(s)
     self.custom_detailed_variables[ "box_weapon_details" ] =            1;  //1 detailed variable(s)
     self.custom_detailed_variables[ "nube_details" ] =                  1;  //2 detailed variable(s)
-}
-
-onPlayerSpawned()
-{
-    self endon( "disconnect" );
-    level endon( "end_game" );
-
-    for ( ;; )
-    {
-        self waittill( "spawned_player" );
-        self iPrintLn( "^2Persistent Upgrades Tracker ^5mod loaded by ^6Hadi77KSA" );
-    }
 }
 
 pers_upgrades_tracker_hud()
