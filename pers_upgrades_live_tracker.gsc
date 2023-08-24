@@ -12,7 +12,6 @@ onPlayerConnect()
     {
         level waittill( "connected", player );
         player init_detailed_variables_toggles();
-        player thread onPlayerSpawned();
         player thread pers_upgrades_tracker_hud();
         player iPrintLn( "^3Persistent Upgrades Tracker ^5mod loaded by ^6Hadi77KSA" );
     }
