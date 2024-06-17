@@ -4,478 +4,576 @@
 
 init()
 {
-    CreateCommand( level.chat_commands[ "ports" ], "trackerhud", "function", ::tracker_hud_command );
-    CreateCommand( level.chat_commands[ "ports" ], "trackerhuddetails", "function", ::tracker_hud_details_command );
-    level thread onPlayerConnect();
+	if ( maps\mp\zombies\_zm_pers_upgrades::is_pers_system_active() )
+	{
+		CreateCommand( level.chat_commands["ports"], "put_hud", "function", ::tracker_hud_command );
+		CreateCommand( level.chat_commands["ports"], "put_elem", "function", ::tracker_hud_elements_command );
+		level thread onPlayerConnect();
+	}
 }
 
 onPlayerConnect()
 {
-    while ( 1 )
-    {
-        level waittill( "connected", player );
-        player init_detailed_variables_toggles();
-        player thread pers_upgrades_tracker_hud();
-        player iPrintLn( "^2Persistent Upgrades Tracker ^5mod loaded by ^6Hadi77KSA" );
-    }
+	for (;;)
+	{
+		level waittill( "connected", player );
+		player init_detailed_variables_toggles();
+		player thread pers_upgrades_tracker_hud();
+		player thread display_mod_message();
+	}
 }
 
 init_detailed_variables_toggles()
 {
-    self.custom_detailed_variables = [];
-    self.custom_detailed_variables[ "all_details" ] =                   0;  //change this to 1 to display additional variables, change to 0 to hide.
-                                                                            //due to limitations, some variables may not display even if enabled.
-                                                                            //on Buried, it's possible to load up to 29 variables.
-                                                                            //total variables = 31. detailed = 17.
+	self.pers_upgrades_tracker_toggles = [];
+	self.pers_upgrades_tracker_toggles["all_details"] =                 0; //change this to 1 to display additional variables, change to 0 to hide.
 
-    self.custom_detailed_variables[ "board_details" ] =                 1;  //1 detailed variable(s)
-    self.custom_detailed_variables[ "revive_details" ] =                1;  //1 detailed variable(s)
-    self.custom_detailed_variables[ "multikill_headshots_details" ] =   1;  //2 detailed variable(s)
-    self.custom_detailed_variables[ "cash_back_details" ] =             1;  //2 detailed variable(s)
-    self.custom_detailed_variables[ "insta_kill_details" ] =            1;  //1 detailed variable(s)
-    self.custom_detailed_variables[ "jugg_details" ] =                  1;  //1 detailed variable(s)
-    self.custom_detailed_variables[ "carpenter_details" ] =             0;  //0 detailed variable(s)
-    self.custom_detailed_variables[ "flopper_details" ] =               1;  //1 detailed variable(s)
-    self.custom_detailed_variables[ "perk_lose_details" ] =             1;  //2 detailed variable(s)
-    self.custom_detailed_variables[ "pistol_points_details" ] =         1;  //1 detailed variable(s)
-    self.custom_detailed_variables[ "double_points_details" ] =         0;  //0 detailed variable(s)
-    self.custom_detailed_variables[ "sniper_details" ] =                1;  //2 detailed variable(s)
-    self.custom_detailed_variables[ "box_weapon_details" ] =            1;  //1 detailed variable(s)
-    self.custom_detailed_variables[ "nube_details" ] =                  1;  //2 detailed variable(s)
+	//due to limitations, some variables may not display even if enabled.
+	//on Buried, it's possible to load up to 29 variables.
+	//total variables = 31. detailed = 17.
+
+	self.pers_upgrades_tracker_toggles["board"] =                       1;
+	self.pers_upgrades_tracker_toggles["board_details"] =               1; //1 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["revive"] =                      1;
+	self.pers_upgrades_tracker_toggles["revive_details"] =              1; //1 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["multikill_headshots"] =         1;
+	self.pers_upgrades_tracker_toggles["multikill_headshots_details"] = 1; //2 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["cash_back"] =                   1;
+	self.pers_upgrades_tracker_toggles["cash_back_details"] =           1; //2 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["insta_kill"] =                  1;
+	self.pers_upgrades_tracker_toggles["insta_kill_details"] =          1; //1 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["jugg"] =                        1;
+	self.pers_upgrades_tracker_toggles["jugg_details"] =                1; //1 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["carpenter"] =                   1;
+	//self.pers_upgrades_tracker_toggles["carpenter_details"] =           0; //0 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["flopper"] =                     1;
+	self.pers_upgrades_tracker_toggles["flopper_details"] =             1; //1 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["perk_lose"] =                   1;
+	self.pers_upgrades_tracker_toggles["perk_lose_details"] =           1; //2 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["pistol_points"] =               1;
+	self.pers_upgrades_tracker_toggles["pistol_points_details"] =       1; //1 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["double_points"] =               1;
+	//self.pers_upgrades_tracker_toggles["double_points_details"] =       0; //0 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["sniper"] =                      1;
+	self.pers_upgrades_tracker_toggles["sniper_details"] =              1; //2 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["box_weapon"] =                  1;
+	self.pers_upgrades_tracker_toggles["box_weapon_details"] =          1; //1 detailed variable(s)
+	self.pers_upgrades_tracker_toggles["nube"] =                        1;
+	self.pers_upgrades_tracker_toggles["nube_details"] =                1; //2 detailed variable(s)
+}
+
+display_mod_message()
+{
+	self endon( "disconnect" );
+
+	flag_wait( "initial_players_connected" );
+	self iPrintLn( "^2Persistent Upgrades Tracker ^5mod by ^6Hadi77KSA" );
 }
 
 pers_upgrades_tracker_hud()
 {
-    level endon( "end_game" );
-    self endon( "disconnect" );
-    self endon( "custom_pers_upgrades_hud_off" );
+	level endon( "end_game" );
+	self endon( "disconnect" );
+	self endon( "custom_pers_upgrades_hud_off" );
 
-    flag_wait( "initial_blackscreen_passed" );
+	if ( level.intermission || !( isdefined( level.pers_upgrades_keys ) && level.pers_upgrades_keys.size > 0 ) )
+		return;
 
-    if ( is_true( self.pers_upgrades_tracker_hud_running ) )
-        return;
+	flag_wait( "initial_blackscreen_passed" );
 
-    self.pers_upgrades_tracker_hud_running = 1;
-    toggled_variables = self.custom_detailed_variables;
+	if ( is_true( self.pers_upgrades_tracker_hud_running ) )
+		return;
 
-    if ( toggled_variables[ "all_details" ] )
-    {
-        stats_array = [];
-        foreach ( pers_upgrade in level.pers_upgrades_keys )
-        {
-            stats_array[ pers_upgrade ] = [];
-        }
-    }
+	self.pers_upgrades_tracker_hud_running = 1;
+	pers_upgrades_tracker_stats = self init_pers_upgrades_tracker_array();
 
-    array = [];
-    while ( 1 )
-    {
-        if ( toggled_variables[ "all_details" ] )
-        {
-            if ( toggled_variables[ "board_details" ] )
-                stats_array[ "board" ][ "Boards stat to obtain" ] = self.pers[ "pers_boarding" ];
+	foreach ( pers_upgrade in getArrayKeys( pers_upgrades_tracker_stats ) )
+	{
+		pers_upgrades_tracker_stats[pers_upgrade] thread pers_upgrade_track_awarded( self, pers_upgrade );
+		if ( isdefined( pers_upgrades_tracker_stats[pers_upgrade].upgrade_stats ) )
+		{
+			switch ( pers_upgrade )
+			{
+				case "multikill_headshots":
+					pers_upgrades_tracker_stats[pers_upgrade] thread pers_multikill_headshots_track_detailed( self );
+					break;
+				case "flopper":
+					pers_upgrades_tracker_stats[pers_upgrade] thread pers_flopper_track_detailed( self );
+					break;
+				case "perk_lose":
+					pers_upgrades_tracker_stats[pers_upgrade] thread pers_perk_lose_track_detailed( self );
+					break;
+				case "pistol_points":
+					pers_upgrades_tracker_stats[pers_upgrade] thread pers_pistol_points_track_detailed( self );
+					break;
+				case "sniper":
+					pers_upgrades_tracker_stats[pers_upgrade] thread pers_sniper_track_detailed( self );
+					break;
+				case "nube":
+					pers_upgrades_tracker_stats[pers_upgrade] thread pers_nube_track_detailed( self );
+					break;
+				case "board":
+				case "revive":
+				case "cash_back":
+				case "insta_kill":
+				case "jugg":
+				case "box_weapon":
+					foreach ( stat_name in level.pers_upgrades[pers_upgrade].stat_names )
+						pers_upgrades_tracker_stats[pers_upgrade] thread generic_pers_upgrade_track_detailed( self, stat_name );
+					break;
+			}
+		}
+	}
+	pers_upgrades_tracker_stats tracker_hud_positions_and_labels();
+	self thread on_tracker_hud_toggle_off( pers_upgrades_tracker_stats );
+	self thread remove_tracker_hud_think( pers_upgrades_tracker_stats );
+}
 
-            if ( toggled_variables[ "revive_details" ] )
-                stats_array[ "revive" ][ "Revives stat to obtain" ] = self.pers[ "pers_revivenoperk" ];
+init_pers_upgrades_tracker_array()
+{
+	pers_upgrades_tracker_array = [];
 
-            if ( toggled_variables[ "multikill_headshots_details" ] )
-            {
-                stats_array[ "multikill_headshots" ][ "Multi-kill collateral headshots stat to obtain" ] = self.pers[ "pers_multikill_headshots" ];
-                stats_array[ "multikill_headshots" ][ "Non-headshots stat to lose" ] = self.non_headshot_kill_counter;
-            }
+	foreach ( pers_upgrade in array_reverse( level.pers_upgrades_keys ) )
+	{
+		if ( is_true( self.pers_upgrades_tracker_toggles[pers_upgrade] ) )
+		{
+			pers_upgrades_tracker_array[pers_upgrade] = self createfontstring( "small", 1.2 );
 
-            if ( toggled_variables[ "cash_back_details" ] )
-            {
-                stats_array[ "cash_back" ][ "Perk purchases stat to obtain" ] = self.pers[ "pers_cash_back_bought" ];
-                stats_array[ "cash_back" ][ "Perk purchases followed by prone stat to obtain" ] = self.pers[ "pers_cash_back_prone" ];
-            }
+			if ( is_true( self.pers_upgrades_tracker_toggles["all_details"] ) && is_true( self.pers_upgrades_tracker_toggles[pers_upgrade + "_details"] ) )
+				pers_upgrades_tracker_array[pers_upgrade].upgrade_stats = [];
+		}
+	}
 
-            if ( toggled_variables[ "insta_kill_details" ] )
-                stats_array[ "insta_kill" ][ "No-kill insta-kills stat to obtain" ] = self.pers[ "pers_insta_kill" ];
+	return pers_upgrades_tracker_array;
+}
 
-            if ( toggled_variables[ "jugg_details" ] )
-                stats_array[ "jugg" ][ "Low-round deaths stat to obtain" ] = self.pers[ "pers_jugg" ];
+pers_upgrade_track_awarded( player, pers_upgrade )
+{
+	level endon( "end_game" );
+	player endon( "disconnect" );
+	player endon( "custom_pers_upgrades_hud_off" );
 
-            if ( toggled_variables[ "flopper_details" ] )
-                stats_array[ "flopper" ][ "Falls stat to obtain" ] = custom_check_value_func( self.pers_num_flopper_damages );
+	for (;;)
+	{
+		wait 0.05;
+		self setValue( player.pers_upgrades_awarded[pers_upgrade] );
+	}
+}
 
-            if ( toggled_variables[ "perk_lose_details" ] )
-            {
-                stats_array[ "perk_lose" ][ "Low-round 4-perk games stat to obtain" ] = self.pers[ "pers_perk_lose_counter" ];
-                if ( !is_true( pers_perk_lose_round_stat_set ) )
-                {
-                    if ( isDefined( self.pers_perk_lose_start_round ) && self.pers_perk_lose_start_round > 1 )
-                    {
-                        stats_array[ "perk_lose" ][ "Lost if perk purchased on round" ] = self.pers_perk_lose_start_round;
-                        pers_perk_lose_round_stat_set = 1;
-                    }
-                    else
-                        stats_array[ "perk_lose" ][ "Lost if perk purchased on round" ] = "";
-                }
-            }
+generic_pers_upgrade_track_detailed( player, stat_name )
+{
+	level endon( "end_game" );
+	player endon( "disconnect" );
+	player endon( "custom_pers_upgrades_hud_off" );
 
-            if ( toggled_variables[ "pistol_points_details" ] )
-                stats_array[ "pistol_points" ][ "Accuracy stat" ] = self maps\mp\zombies\_zm_pers_upgrades_functions::pers_get_player_accuracy();
+	self.upgrade_stats[stat_name] = player createfontstring( "small", 1 );
 
-            if ( toggled_variables[ "sniper_details" ] )
-            {
-                stats_array[ "sniper" ][ "Long-range sniper round kills stat to obtain" ] = custom_check_value_func( self.pers_sniper_kills );
-                stats_array[ "sniper" ][ "Sniper misses stat to lose" ] = custom_check_value_func( self.num_sniper_misses );
-            }
+	for (;;)
+	{
+		wait 0.05;
+		self.upgrade_stats[stat_name] setValue( player.pers[stat_name] );
+	}
+}
 
-            if ( toggled_variables[ "box_weapon_details" ] )
-                stats_array[ "box_weapon" ][ "Weapons accepted in a row stat to obtain" ] = self.pers[ "pers_box_weapon_counter" ];
+pers_multikill_headshots_track_detailed( player )
+{
+	level endon( "end_game" );
+	player endon( "disconnect" );
+	player endon( "custom_pers_upgrades_hud_off" );
 
-            if ( toggled_variables[ "nube_details" ] )
-            {
-                stats_array[ "nube" ][ "Maximum round completed stat" ] = self.pers[ "pers_max_round_reached" ];
-                stats_array[ "nube" ][ "Nube kills stat" ] = self.pers_num_nube_kills;
-            }
-        }
+	self.upgrade_stats["pers_multikill_headshots"] = player createfontstring( "small", 1 );
+	self.upgrade_stats["non_headshot_kill_counter"] = player createfontstring( "small", 1 );
 
-        foreach ( pers_upgrade in level.pers_upgrades_keys )
-        {
-            array[ "^2" + pers_upgrade + " awarded" ] = self.pers_upgrades_awarded[ pers_upgrade ];
-            if ( toggled_variables[ "all_details" ] && toggled_variables[ pers_upgrade + "_details" ] )
-                array[ pers_upgrade + " stats:" ] = stats_array[ pers_upgrade ];
-        }
+	for (;;)
+	{
+		wait 0.05;
+		self.upgrade_stats["pers_multikill_headshots"] setValue( player.pers["pers_multikill_headshots"] );
+		self.upgrade_stats["non_headshot_kill_counter"] setValue( player.non_headshot_kill_counter );
+		player waittill( "zom_kill" );
+	}
+}
 
-        if ( !is_true( hud_init_done ) )
-        {
-            custom_hud = self custom_hud_init( array );
-            hud_init_done = 1;
-            self thread tracker_hud_toggle_off_watcher( custom_hud );
-        }
-        else
-            custom_hud update_custom_hud( array );
+pers_flopper_track_detailed( player )
+{
+	level endon( "end_game" );
+	player endon( "disconnect" );
+	player endon( "custom_pers_upgrades_hud_off" );
 
-        wait 0.05;
-    }
+	self.upgrade_stats["pers_num_flopper_damages"] = player createfontstring( "small", 1 );
+
+	for (;;)
+	{
+		wait 0.05;
+		self.upgrade_stats["pers_num_flopper_damages"] setValue( custom_check_value_func( player.pers_num_flopper_damages ) );
+		player waittill( "damage" );
+	}
+}
+
+pers_perk_lose_track_detailed( player )
+{
+	level endon( "end_game" );
+	player endon( "disconnect" );
+	player endon( "custom_pers_upgrades_hud_off" );
+
+	self.upgrade_stats["pers_perk_lose_counter"] = player createfontstring( "small", 1 );
+	self.upgrade_stats["pers_perk_lose_start_round"] = player createfontstring( "small", 1 );
+
+	for (;;)
+	{
+		wait 0.05;
+		self.upgrade_stats["pers_perk_lose_counter"] setValue( player.pers["pers_perk_lose_counter"] );
+		if ( !isdefined( player.pers_perk_lose_start_round ) || player.pers_perk_lose_start_round == 1 )
+			self.upgrade_stats["pers_perk_lose_start_round"] setValue( -1 );
+		else
+			self.upgrade_stats["pers_perk_lose_start_round"] setValue( player.pers_perk_lose_start_round );
+
+		player waittill( "burp" );
+		wait 2;
+	}
+}
+
+pers_pistol_points_track_detailed( player )
+{
+	level endon( "end_game" );
+	player endon( "disconnect" );
+	player endon( "custom_pers_upgrades_hud_off" );
+
+	self.upgrade_stats["accuracy"] = player createfontstring( "small", 1 );
+
+	for (;;)
+	{
+		wait 0.05;
+		self.upgrade_stats["accuracy"] setValue( player maps\mp\zombies\_zm_pers_upgrades_functions::pers_get_player_accuracy() );
+		player waittill( "weapon_fired" );
+	}
+}
+
+pers_sniper_track_detailed( player )
+{
+	level endon( "end_game" );
+	player endon( "disconnect" );
+	player endon( "custom_pers_upgrades_hud_off" );
+
+	self.upgrade_stats["pers_sniper_kills"] = player createfontstring( "small", 1 );
+	self.upgrade_stats["num_sniper_misses"] = player createfontstring( "small", 1 );
+
+	for (;;)
+	{
+		wait 0.05;
+		self.upgrade_stats["pers_sniper_kills"] setValue( custom_check_value_func( player.pers_sniper_kills ) );
+		self.upgrade_stats["num_sniper_misses"] setValue( custom_check_value_func( player.num_sniper_misses ) );
+		player waittill( "weapon_fired" );
+	}
+}
+
+pers_nube_track_detailed( player )
+{
+	level endon( "end_game" );
+	player endon( "disconnect" );
+	player endon( "custom_pers_upgrades_hud_off" );
+
+	self.upgrade_stats["pers_max_round_reached"] = player createfontstring( "small", 1 );
+	self.upgrade_stats["pers_num_nube_kills"] = player createfontstring( "small", 1 );
+
+	for (;;)
+	{
+		wait 0.05;
+		self.upgrade_stats["pers_max_round_reached"] setValue( player.pers["pers_max_round_reached"] );
+		self.upgrade_stats["pers_num_nube_kills"] setValue( player.pers_num_nube_kills );
+		player waittill_any( "pers_stats_end_of_round", "pers_player_zombie_kill" );
+	}
 }
 
 custom_check_value_func( variable )
 {
-    if ( isDefined( variable ) )
-        return variable;
+	if ( !isdefined( variable ) )
+		return -1;
 
-    return "";
+	return variable;
 }
 
-custom_hud_init( array )
+tracker_hud_positions_and_labels()
 {
-    huds = [];
-    point = "TOP_LEFT";
-    relativePoint = "TOP_LEFT";
-    yoffset = -20;
-    keys = getArrayKeys( array );
-    for ( key_index = keys.size - 1; key_index >= 0; key_index-- )
-    {
-        key = keys[ key_index ];
-        if ( isSubStr( key, "awarded" ) )
-        {
-            if ( yoffset >= 123 && relativePoint != "TOP_RIGHT" )
-            {
-                point = "TOP_RIGHT";
-                relativePoint = "TOP_RIGHT";
-                yoffset = -20;
-            }
-            huds[ key ] = self createfontstring( "small", 1.2 );
-            huds[ key ] setpoint( point, relativePoint, 0, yoffset );
-            huds[ key ].hidewheninmenu = 1;
-            switch ( getSubStr( key, 2, key.size - 8 ) )
-            {
-                case "board":
-                    huds[ key ].label = &"^2board awarded: ";
-                    break;
+	point = "TOP_LEFT";
+	relativePoint = "TOP_LEFT";
+	yoffset = -20;
 
-                case "revive":
-                    huds[ key ].label = &"^2revive awarded: ";
-                    break;
+	foreach ( pers_upgrade in getArrayKeys( self ) )
+	{
+		if ( yoffset >= 123 && relativePoint != "TOP_RIGHT" )
+		{
+			point = "TOP_RIGHT";
+			relativePoint = "TOP_RIGHT";
+			yoffset = -20;
+		}
+		self[pers_upgrade] setpoint( point, relativePoint, 0, yoffset );
+		self[pers_upgrade].hidewheninmenu = 1;
+		switch ( pers_upgrade )
+		{
+			case "board":
+				self[pers_upgrade].label = &"^2board awarded: ";
+				break;
+			case "revive":
+				self[pers_upgrade].label = &"^2revive awarded: ";
+				break;
+			case "multikill_headshots":
+				self[pers_upgrade].label = &"^2multikill_headshots awarded: ";
+				break;
+			case "cash_back":
+				self[pers_upgrade].label = &"^2cash_back awarded: ";
+				break;
+			case "insta_kill":
+				self[pers_upgrade].label = &"^2insta_kill awarded: ";
+				break;
+			case "jugg":
+				self[pers_upgrade].label = &"^2jugg awarded: ";
+				break;
+			case "carpenter":
+				self[pers_upgrade].label = &"^2carpenter awarded: ";
+				break;
+			case "flopper":
+				self[pers_upgrade].label = &"^2flopper awarded: ";
+				break;
+			case "perk_lose":
+				self[pers_upgrade].label = &"^2perk_lose awarded: ";
+				break;
+			case "pistol_points":
+				self[pers_upgrade].label = &"^2pistol_points awarded: ";
+				break;
+			case "double_points":
+				self[pers_upgrade].label = &"^2double_points awarded: ";
+				break;
+			case "sniper":
+				self[pers_upgrade].label = &"^2sniper awarded: ";
+				break;
+			case "box_weapon":
+				self[pers_upgrade].label = &"^2box_weapon awarded: ";
+				break;
+			case "nube":
+				self[pers_upgrade].label = &"^2nube awarded: ";
+				break;
+		}
+		yoffset += 13;
 
-                case "multikill_headshots":
-                    huds[ key ].label = &"^2multikill_headshots awarded: ";
-                    break;
-
-                case "cash_back":
-                    huds[ key ].label = &"^2cash_back awarded: ";
-                    break;
-
-                case "insta_kill":
-                    huds[ key ].label = &"^2insta_kill awarded: ";
-                    break;
-
-                case "jugg":
-                    huds[ key ].label = &"^2jugg awarded: ";
-                    break;
-
-                case "carpenter":
-                    huds[ key ].label = &"^2carpenter awarded: ";
-                    break;
-
-                case "flopper":
-                    huds[ key ].label = &"^2flopper awarded: ";
-                    break;
-
-                case "perk_lose":
-                    huds[ key ].label = &"^2perk_lose awarded: ";
-                    break;
-
-                case "pistol_points":
-                    huds[ key ].label = &"^2pistol_points awarded: ";
-                    break;
-
-                case "double_points":
-                    huds[ key ].label = &"^2double_points awarded: ";
-                    break;
-
-                case "sniper":
-                    huds[ key ].label = &"^2sniper awarded: ";
-                    break;
-
-                case "box_weapon":
-                    huds[ key ].label = &"^2box_weapon awarded: ";
-                    break;
-
-                case "nube":
-                    huds[ key ].label = &"^2nube awarded: ";
-                    break;
-
-                default:
-                    huds[ key ].label = &"^2unknown awarded: ";
-            }
-            yoffset += 13;
-        }
-        else //if ( isSubStr( key, "stats:" ) )
-        {
-            sub_keys = getArrayKeys( array[ key ] );
-            for ( sub_key_index = sub_keys.size - 1; sub_key_index >= 0; sub_key_index-- )
-            {
-                sub_key = sub_keys[ sub_key_index ];
-                huds[ sub_key ] = self createfontstring( "small", 1 );
-                huds[ sub_key ] setpoint( point, relativePoint, 0, yoffset );
-                huds[ sub_key ].hidewheninmenu = 1;
-                switch ( sub_key )
-                {
-                    //board
-                    case "Boards stat to obtain":
-                        huds[ sub_key ].label = &"Boards stat to obtain: ";
-                        break;
-
-                    //revive
-                    case "Revives stat to obtain":
-                        huds[ sub_key ].label = &"Revives stat to obtain: ";
-                        break;
-
-                    //multikill_headshots
-                    case "Multi-kill collateral headshots stat to obtain":
-                        huds[ sub_key ].label = &"Multi-kill collateral headshots stat to obtain: ";
-                        break;
-                    case "Non-headshots stat to lose":
-                        huds[ sub_key ].label = &"Non-headshots stat to lose: ";
-                        break;
-
-                    //cash_back
-                    case "Perk purchases stat to obtain":
-                        huds[ sub_key ].label = &"Perk purchases stat to obtain: ";
-                        break;
-                    case "Perk purchases followed by prone stat to obtain":
-                        huds[ sub_key ].label = &"Perk purchases followed by prone stat to obtain: ";
-                        break;
-
-                    //insta_kill
-                    case "No-kill insta-kills stat to obtain":
-                        huds[ sub_key ].label = &"No-kill insta-kills stat to obtain: ";
-                        break;
-
-                    //jugg
-                    case "Low-round deaths stat to obtain":
-                        huds[ sub_key ].label = &"Low-round deaths stat to obtain: ";
-                        break;
-
-                    //flopper
-                    case "Falls stat to obtain":
-                        huds[ sub_key ].label = &"Falls stat to obtain: ";
-                        break;
-
-                    //perk_lose
-                    case "Low-round 4-perk games stat to obtain":
-                        huds[ sub_key ].label = &"Low-round 4-perk games stat to obtain: ";
-                        break;
-                    case "Lost if perk purchased on round":
-                        huds[ sub_key ].label = &"Lost if perk purchased on round: ";
-                        break;
-
-                    //pistol_points
-                    case "Accuracy stat":
-                        huds[ sub_key ].label = &"Accuracy stat: ";
-                        break;
-
-                    //sniper
-                    case "Long-range sniper round kills stat to obtain":
-                        huds[ sub_key ].label = &"Long-range sniper round kills stat to obtain: ";
-                        break;
-                    case "Sniper misses stat to lose":
-                        huds[ sub_key ].label = &"Sniper misses stat to lose: ";
-                        break;
-
-                    //box_weapon
-                    case "Weapons accepted in a row stat to obtain":
-                        huds[ sub_key ].label = &"Weapons accepted in a row stat to obtain: ";
-                        break;
-
-                    //nube
-                    case "Maximum round completed stat":
-                        huds[ sub_key ].label = &"Maximum round completed stat: ";
-                        break;
-                    case "Nube kills stat":
-                        huds[ sub_key ].label = &"Nube kills stat: ";
-                        break;
-
-                    default:
-                        huds[ sub_key ].label = &"unknown stat: ";
-                }
-                yoffset += 11;
-            }
-        }
-    }
-    return huds;
+		if ( isdefined( self[pers_upgrade].upgrade_stats ) )
+		{
+			upgrade_stats = array_reverse( getArrayKeys( self[pers_upgrade].upgrade_stats ) );
+			foreach ( upgrade_stat in upgrade_stats )
+			{
+				self[pers_upgrade].upgrade_stats[upgrade_stat] setpoint( point, relativePoint, 0, yoffset );
+				self[pers_upgrade].upgrade_stats[upgrade_stat].hidewheninmenu = 1;
+				switch ( upgrade_stat )
+				{
+					//board
+					case "pers_boarding":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Boards stat to obtain: ";
+						break;
+					//revive
+					case "pers_revivenoperk":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Revives stat to obtain: ";
+						break;
+					//multikill_headshots
+					case "pers_multikill_headshots":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Multi-kill collateral headshots stat to obtain: ";
+						break;
+					case "non_headshot_kill_counter":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Non-headshots stat to lose: ";
+						break;
+					//cash_back
+					case "pers_cash_back_bought":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Perk purchases stat to obtain: ";
+						break;
+					case "pers_cash_back_prone":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Perk purchases followed by prone stat to obtain: ";
+						break;
+					//insta_kill
+					case "pers_insta_kill":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"No-kill insta-kills stat to obtain: ";
+						break;
+					//jugg
+					case "pers_jugg":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Low-round deaths stat to obtain: ";
+						break;
+					//flopper
+					case "pers_num_flopper_damages":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Falls stat to obtain: ";
+						break;
+					//perk_lose
+					case "pers_perk_lose_counter":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Low-round 4-perk games stat to obtain: ";
+						break;
+					case "pers_perk_lose_start_round":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Lost if perk purchased on round: ";
+						break;
+					//pistol_points
+					case "accuracy":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Accuracy stat: ";
+						break;
+					//sniper
+					case "pers_sniper_kills":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Long-range sniper round kills stat to obtain: ";
+						break;
+					case "num_sniper_misses":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Sniper misses stat to lose: ";
+						break;
+					//box_weapon
+					case "pers_box_weapon_counter":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Weapons accepted in a row stat to obtain: ";
+						break;
+					//nube
+					case "pers_max_round_reached":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Maximum round completed stat: ";
+						break;
+					case "pers_num_nube_kills":
+						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Nube kills stat: ";
+						break;
+				}
+				yoffset += 11;
+			}
+		}
+	}
 }
 
-update_custom_hud( array )
+remove_tracker_hud_think( hud )
 {
-    foreach ( key in getArrayKeys( array ) )
-    {
-        if ( isSubStr( key, "awarded" ) )
-            self[ key ] setValue( array[ key ] );
-
-        else //if ( isSubStr( key, "stats:" ) )
-        {
-            foreach ( sub_key in getArrayKeys( array[ key ] ) )
-            {
-                self[ sub_key ] setValue( array[ key ][ sub_key ] );
-            }
-        }
-    }
+	waittill_any_ents_two( self, "disconnect", level, "end_game" );
+	remove_tracker_hud( hud );
 }
 
-tracker_hud_toggle_off_watcher( hud )
+remove_tracker_hud( hud )
 {
-    self waittill( "custom_tracker_hud_toggle_off" );
-    hud custom_destroy_tracker_hud();
-    self notify( "custom_pers_upgrades_hud_off" );
-    self.pers_upgrades_tracker_hud_running = 0;
+	header_elems = array_copy( hud );
+	sub_elems = [];
+	foreach ( elem in array_reverse( header_elems ) )
+		sub_elems = maps\mp\_utility::combinearrays( sub_elems, elem.upgrade_stats );
+
+	total_elems = maps\mp\_utility::combinearrays( header_elems, sub_elems );
+	foreach ( elem in total_elems )
+	{
+		elem.parent hud_removechild_from_hud_parent( elem );
+		if ( isdefined( elem ) )
+			elem destroy();
+	}
 }
 
-custom_destroy_tracker_hud()
+hud_removechild_from_hud_parent( element )
 {
-    keys = getArrayKeys( self );
-    foreach ( key in keys )
-    {
-        if ( isSubStr( key, "stats:" ) )
-        {
-            sub_keys = getArrayKeys( self[ key ] );
-            foreach ( sub_key in sub_keys )
-            {
-                self[ sub_key ] destroyelem();
-            }
-        }
-        else //if ( isSubStr( key, "awarded" ) )
-            self[ key ] destroyelem();
-    }
+	element.parent = undefined;
+
+	if ( self.children[self.children.size - 1] != element )
+	{
+		self.children[element.index] = self.children[self.children.size - 1];
+		if ( isdefined( self.children[element.index] ) )
+			self.children[element.index].index = element.index;
+	}
+
+	self.children[self.children.size - 1] = undefined;
+	element.index = undefined;
+}
+
+on_tracker_hud_toggle_off( hud )
+{
+	level endon( "end_game" );
+	self endon( "disconnect" );
+
+	self waittill( "custom_tracker_hud_toggle_off" );
+	self notify( "custom_pers_upgrades_hud_off" );
+	remove_tracker_hud( hud );
+	self.pers_upgrades_tracker_hud_running = 0;
 }
 
 tracker_hud_command(args)
 {
-    if (args.size < 1)
-    {
-        return NotEnoughArgsError(1);
-    }
+	if (args.size < 1)
+	{
+		return NotEnoughArgsError(1);
+	}
 
-    error = self toggle_tracker_hud(args[0]);
+	error = self toggle_tracker_hud(args[0]);
 
-    if (IsDefined(error))
-    {
-        return error;
-    }
+	if (IsDefined(error))
+	{
+		return error;
+	}
 }
 
 toggle_tracker_hud( toggle )
 {
-    if ( !isinarray( array( "1", "on", "0", "off" ), toLower( toggle ) ) )
-    {
-        error = array( "Invalid input", GetDvar("cc_prefix") + "trackerhud" + " only accepts:", "'1' or 'on' to enable", "'0' or 'off' to disable" );
-        return error;
-    }
-    else if ( isinarray( array( "0", "off" ), toLower( toggle ) ) )
-    {
-        if ( !is_true( self.pers_upgrades_tracker_hud_running ) )
-        {
-            error = array( "Error:", GetDvar("cc_prefix") + "trackerhud" + " is already off" );
-            return error;
-        }
-        self notify( "custom_tracker_hud_toggle_off" );
-    }
-    else //if ( isinarray( array( "1", "on" ), toLower( toggle ) )
-    {
-        if ( is_true( self.pers_upgrades_tracker_hud_running ) )
-        {
-            error = array( "Error:", GetDvar("cc_prefix") + "trackerhud" + " is already on" );
-            return error;
-        }
-        self thread pers_upgrades_tracker_hud();
-    }
+	if ( !isinarray( array( "1", "on", "0", "off" ), toLower( toggle ) ) )
+	{
+		error = array( "Invalid input", GetDvar("cc_prefix") + "put_hud" + " only accepts:", "'1' or 'on' to enable", "'0' or 'off' to disable" );
+		return error;
+	}
+	else if ( isinarray( array( "0", "off" ), toLower( toggle ) ) )
+	{
+		if ( !is_true( self.pers_upgrades_tracker_hud_running ) )
+		{
+			error = array( "Error:", GetDvar("cc_prefix") + "put_hud" + " is already off" );
+			return error;
+		}
+		self notify( "custom_tracker_hud_toggle_off" );
+	}
+	else //if ( isinarray( array( "1", "on" ), toLower( toggle ) ) )
+	{
+		if ( is_true( self.pers_upgrades_tracker_hud_running ) )
+		{
+			error = array( "Error:", GetDvar("cc_prefix") + "put_hud" + " is already on" );
+			return error;
+		}
+		self thread pers_upgrades_tracker_hud();
+	}
 }
 
-tracker_hud_details_command(args)
+tracker_hud_elements_command(args)
 {
-    if (args.size < 2)
-    {
-        return NotEnoughArgsError(2);
-    }
+	if (args.size < 2)
+	{
+		return NotEnoughArgsError(2);
+	}
 
-    error = self toggle_tracker_hud_details(args[0], args[1]);
+	error = self toggle_tracker_hud_elements(args[0], args[1]);
 
-    if (IsDefined(error))
-    {
-        return error;
-    }
+	if (IsDefined(error))
+	{
+		return error;
+	}
 }
 
-toggle_tracker_hud_details( variable_to_toggle, toggle )
+toggle_tracker_hud_elements( variable_to_toggle, toggle )
 {
-    if ( !isinarray( getArrayKeys( self.custom_detailed_variables ), toLower( variable_to_toggle ) ) )
-    {
-        error = array( "Invalid input", GetDvar("cc_prefix") + "trackerhuddetails" + " could not find " + toLower( variable_to_toggle ) );
-        return error;
-    }
+	if ( !isinarray( getArrayKeys( self.pers_upgrades_tracker_toggles ), toLower( variable_to_toggle ) ) )
+	{
+		error = array( "Invalid input", GetDvar("cc_prefix") + "put_elem" + " could not find " + toLower( variable_to_toggle ) );
+		return error;
+	}
 
-    if ( !isinarray( array( "1", "on", "0", "off" ), toLower( toggle ) ) )
-    {
-        error = array( "Invalid input", GetDvar("cc_prefix") + "trackerhuddetails" + " " + toLower( variable_to_toggle ) + " only accepts:", "'1' or 'on' to enable", "'0' or 'off' to disable" );
-        return error;
-    }
-    else if ( isinarray( array( "0", "off" ), toLower( toggle ) ) )
-    {
-        if ( self.custom_detailed_variables[ variable_to_toggle ] == 0 )
-        {
-            error = array( "Error:", variable_to_toggle + " is already off" );
-            return error;
-        }
-        self.custom_detailed_variables[ variable_to_toggle ] = 0;
-        self notify( "custom_tracker_hud_toggle_off" );
-        wait 0.05;
-        self thread pers_upgrades_tracker_hud();
-    }
-    else //if ( isinarray( array( "1", "on" ), toLower( toggle ) )
-    {
-        if ( self.custom_detailed_variables[ variable_to_toggle ] == 1 )
-        {
-            error = array( "Error:", variable_to_toggle + " is already on" );
-            return error;
-        }
-        self.custom_detailed_variables[ variable_to_toggle ] = 1;
-        self notify( "custom_tracker_hud_toggle_off" );
-        wait 0.05;
-        self thread pers_upgrades_tracker_hud();
-    }
+	if ( !isinarray( array( "1", "on", "0", "off" ), toLower( toggle ) ) )
+	{
+		error = array( "Invalid input", GetDvar("cc_prefix") + "put_elem" + " " + toLower( variable_to_toggle ) + " only accepts:", "'1' or 'on' to enable", "'0' or 'off' to disable" );
+		return error;
+	}
+	else if ( isinarray( array( "0", "off" ), toLower( toggle ) ) )
+	{
+		if ( self.pers_upgrades_tracker_toggles[variable_to_toggle] == 0 )
+		{
+			error = array( "Error:", variable_to_toggle + " is already off" );
+			return error;
+		}
+		self.pers_upgrades_tracker_toggles[variable_to_toggle] = 0;
+		self notify( "custom_tracker_hud_toggle_off" );
+		wait 0.05;
+		self thread pers_upgrades_tracker_hud();
+	}
+	else //if ( isinarray( array( "1", "on" ), toLower( toggle ) ) )
+	{
+		if ( self.pers_upgrades_tracker_toggles[variable_to_toggle] == 1 )
+		{
+			error = array( "Error:", variable_to_toggle + " is already on" );
+			return error;
+		}
+		self.pers_upgrades_tracker_toggles[variable_to_toggle] = 1;
+		self notify( "custom_tracker_hud_toggle_off" );
+		wait 0.05;
+		self thread pers_upgrades_tracker_hud();
+	}
 }
