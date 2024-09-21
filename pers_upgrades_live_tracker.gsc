@@ -60,7 +60,6 @@ init_detailed_variables_toggles()
 display_mod_message()
 {
 	self endon( "disconnect" );
-
 	flag_wait( "initial_players_connected" );
 	self iPrintLn( "^3Persistent Upgrades Tracker ^5mod by ^6Hadi77KSA" );
 }
@@ -76,9 +75,10 @@ pers_upgrades_tracker_hud()
 	flag_wait( "initial_blackscreen_passed" );
 	pers_upgrades_tracker_stats = self init_pers_upgrades_tracker_array();
 
-	foreach ( pers_upgrade in getArrayKeys( pers_upgrades_tracker_stats ) )
+	foreach ( pers_upgrade in array_reverse( getArrayKeys( pers_upgrades_tracker_stats ) ) )
 	{
 		pers_upgrades_tracker_stats[pers_upgrade] thread pers_upgrade_track_awarded( self, pers_upgrade );
+
 		if ( isdefined( pers_upgrades_tracker_stats[pers_upgrade].upgrade_stats ) )
 		{
 			switch ( pers_upgrade )
@@ -113,6 +113,7 @@ pers_upgrades_tracker_hud()
 			}
 		}
 	}
+
 	pers_upgrades_tracker_stats tracker_hud_positions_and_labels();
 	self thread remove_tracker_hud_think( pers_upgrades_tracker_stats );
 }
@@ -121,7 +122,7 @@ init_pers_upgrades_tracker_array()
 {
 	pers_upgrades_tracker_array = [];
 
-	foreach ( pers_upgrade in array_reverse( level.pers_upgrades_keys ) )
+	foreach ( pers_upgrade in level.pers_upgrades_keys )
 	{
 		if ( is_true( self.pers_upgrades_tracker_toggles[pers_upgrade] ) )
 		{
@@ -151,7 +152,6 @@ generic_pers_upgrade_track_detailed( player, stat_name )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
-
 	self.upgrade_stats[stat_name] = player createfontstring( "small", 1 );
 
 	for (;;)
@@ -165,7 +165,6 @@ pers_multikill_headshots_track_detailed( player )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
-
 	self.upgrade_stats["pers_multikill_headshots"] = player createfontstring( "small", 1 );
 	self.upgrade_stats["non_headshot_kill_counter"] = player createfontstring( "small", 1 );
 
@@ -182,7 +181,6 @@ pers_flopper_track_detailed( player )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
-
 	self.upgrade_stats["pers_num_flopper_damages"] = player createfontstring( "small", 1 );
 
 	for (;;)
@@ -197,7 +195,6 @@ pers_perk_lose_track_detailed( player )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
-
 	self.upgrade_stats["pers_perk_lose_counter"] = player createfontstring( "small", 1 );
 	self.upgrade_stats["pers_perk_lose_start_round"] = player createfontstring( "small", 1 );
 
@@ -205,6 +202,7 @@ pers_perk_lose_track_detailed( player )
 	{
 		wait 0.05;
 		self.upgrade_stats["pers_perk_lose_counter"] setValue( player.pers["pers_perk_lose_counter"] );
+
 		if ( !isdefined( player.pers_perk_lose_start_round ) || player.pers_perk_lose_start_round == 1 )
 			self.upgrade_stats["pers_perk_lose_start_round"] setValue( -1 );
 		else
@@ -219,7 +217,6 @@ pers_pistol_points_track_detailed( player )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
-
 	self.upgrade_stats["accuracy"] = player createfontstring( "small", 1 );
 
 	for (;;)
@@ -234,7 +231,6 @@ pers_sniper_track_detailed( player )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
-
 	self.upgrade_stats["pers_sniper_kills"] = player createfontstring( "small", 1 );
 	self.upgrade_stats["num_sniper_misses"] = player createfontstring( "small", 1 );
 
@@ -251,7 +247,6 @@ pers_nube_track_detailed( player )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
-
 	self.upgrade_stats["pers_max_round_reached"] = player createfontstring( "small", 1 );
 	self.upgrade_stats["pers_num_nube_kills"] = player createfontstring( "small", 1 );
 
@@ -278,7 +273,7 @@ tracker_hud_positions_and_labels()
 	relativePoint = "TOP_LEFT";
 	yoffset = -20;
 
-	foreach ( pers_upgrade in getArrayKeys( self ) )
+	foreach ( pers_upgrade in array_reverse( getArrayKeys( self ) ) )
 	{
 		if ( yoffset >= 123 && relativePoint != "TOP_RIGHT" )
 		{
@@ -286,8 +281,10 @@ tracker_hud_positions_and_labels()
 			relativePoint = "TOP_RIGHT";
 			yoffset = -20;
 		}
+
 		self[pers_upgrade] setpoint( point, relativePoint, 0, yoffset );
 		self[pers_upgrade].hidewheninmenu = 1;
+
 		switch ( pers_upgrade )
 		{
 			case "board":
@@ -333,15 +330,18 @@ tracker_hud_positions_and_labels()
 				self[pers_upgrade].label = &"^2nube awarded: ";
 				break;
 		}
+
 		yoffset += 13;
 
 		if ( isdefined( self[pers_upgrade].upgrade_stats ) )
 		{
 			upgrade_stats = array_reverse( getArrayKeys( self[pers_upgrade].upgrade_stats ) );
+
 			foreach ( upgrade_stat in upgrade_stats )
 			{
 				self[pers_upgrade].upgrade_stats[upgrade_stat] setpoint( point, relativePoint, 0, yoffset );
 				self[pers_upgrade].upgrade_stats[upgrade_stat].hidewheninmenu = 1;
+
 				switch ( upgrade_stat )
 				{
 					//board
@@ -408,6 +408,7 @@ tracker_hud_positions_and_labels()
 						self[pers_upgrade].upgrade_stats[upgrade_stat].label = &"Nube kills stat: ";
 						break;
 				}
+
 				yoffset += 11;
 			}
 		}
@@ -424,13 +425,16 @@ remove_tracker_hud( hud )
 {
 	header_elems = array_copy( hud );
 	sub_elems = [];
-	foreach ( elem in array_reverse( header_elems ) )
+
+	foreach ( elem in header_elems )
 		sub_elems = maps\mp\_utility::combinearrays( sub_elems, elem.upgrade_stats );
 
 	total_elems = maps\mp\_utility::combinearrays( header_elems, sub_elems );
+
 	foreach ( elem in total_elems )
 	{
 		elem.parent hud_removechild_from_hud_parent( elem );
+
 		if ( isdefined( elem ) )
 			elem destroy();
 	}
@@ -443,6 +447,7 @@ hud_removechild_from_hud_parent( element )
 	if ( self.children[self.children.size - 1] != element )
 	{
 		self.children[element.index] = self.children[self.children.size - 1];
+
 		if ( isdefined( self.children[element.index] ) )
 			self.children[element.index].index = element.index;
 	}
