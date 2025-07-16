@@ -203,7 +203,7 @@ pers_flopper_track_detailed( player )
 	for (;;)
 	{
 		wait 0.05;
-		self.upgrade_stats["pers_num_flopper_damages"] setValue( custom_check_value_func( player.pers_num_flopper_damages ) );
+		self.upgrade_stats["pers_num_flopper_damages"] setValue( isdefined( player.pers_num_flopper_damages ) ? player.pers_num_flopper_damages : -1 );
 		player waittill( "damage" );
 	}
 }
@@ -220,12 +220,7 @@ pers_perk_lose_track_detailed( player )
 	{
 		wait 0.05;
 		self.upgrade_stats["pers_perk_lose_counter"] setValue( player.pers["pers_perk_lose_counter"] );
-
-		if ( !isdefined( player.pers_perk_lose_start_round ) || player.pers_perk_lose_start_round == 1 )
-			self.upgrade_stats["pers_perk_lose_start_round"] setValue( -1 );
-		else
-			self.upgrade_stats["pers_perk_lose_start_round"] setValue( player.pers_perk_lose_start_round );
-
+		self.upgrade_stats["pers_perk_lose_start_round"] setValue( ( isdefined( player.pers_perk_lose_start_round ) && player.pers_perk_lose_start_round != 1 ) ? player.pers_perk_lose_start_round : -1 );
 		player waittill( "burp" );
 		wait 2;
 	}
@@ -257,8 +252,8 @@ pers_sniper_track_detailed( player )
 	for (;;)
 	{
 		wait 0.05;
-		self.upgrade_stats["pers_sniper_kills"] setValue( custom_check_value_func( player.pers_sniper_kills ) );
-		self.upgrade_stats["num_sniper_misses"] setValue( custom_check_value_func( player.num_sniper_misses ) );
+		self.upgrade_stats["pers_sniper_kills"] setValue( isdefined( player.pers_sniper_kills ) ? player.pers_sniper_kills : -1 );
+		self.upgrade_stats["num_sniper_misses"] setValue( isdefined( player.num_sniper_misses ) ? player.num_sniper_misses : -1 );
 		player waittill( "weapon_fired" );
 	}
 }
@@ -278,14 +273,6 @@ pers_nube_track_detailed( player )
 		self.upgrade_stats["pers_num_nube_kills"] setValue( player.pers_num_nube_kills );
 		player waittill_any( "pers_stats_end_of_round", "pers_player_zombie_kill" );
 	}
-}
-
-custom_check_value_func( variable )
-{
-	if ( !isdefined( variable ) )
-		return -1;
-
-	return variable;
 }
 
 tracker_hud_positions_and_labels( pers_upgrades_tracker_array )
