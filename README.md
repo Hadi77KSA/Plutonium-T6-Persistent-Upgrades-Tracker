@@ -7,7 +7,7 @@ This is my first experience with GSC modding. So, any feedback and suggestions a
 ![20230611175852_1](https://github.com/Hadi77KSA/Plutonium-T6-Persistent-Upgrades-Tracker/assets/135042368/d305f74e-6395-4be9-80d6-8d7721fe0131)
 
 The option to display detailed variables is disabled by default, meaning that the script will only show the information regarding whether each upgrade is awarded or not. To enable the detailed variables to be displayed, locate the following line in the script:  
-`self.custom_detailed_variables["all_details"] = 0;`  
+`self.pers_upgrades_monitor["all" + "_details"] = 0;`  
 and change the `0` to `1`.
 
 **DISCLAIMER:** beware that not all variables will display if too many are enabled. Having too many variables enabled can also prevent some HUD elements of the game from loading properly, such as progress bars for placing parts.  
