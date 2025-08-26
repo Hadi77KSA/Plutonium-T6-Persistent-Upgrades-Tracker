@@ -19,7 +19,7 @@ onPlayerConnect()
 		level waittill( "connected", player );
 		player init_detailed_variables_toggles();
 		player thread pers_upgrades_monitor();
-		player thread display_mod_message();
+		player thread msg();
 	}
 }
 
@@ -62,7 +62,7 @@ init_detailed_variables_toggles()
 	self.pers_upgrades_monitor["nube" + "_details"] =                1; //2 detailed variable(s)
 }
 
-display_mod_message()
+msg()
 {
 	self endon( "disconnect" );
 	flag_wait( "initial_players_connected" );
@@ -91,48 +91,43 @@ pers_upgrades_monitor()
 		if ( is_true( self.pers_upgrades_monitor[pers_upgrade] ) )
 		{
 			pers_upgrades_monitor[pers_upgrade] = self createfontstring( "small", 1.2 );
+			pers_upgrades_monitor[pers_upgrade] thread check_pers_upgrade( self, pers_upgrade );
 
 			if ( is_true( self.pers_upgrades_monitor["all" + "_details"] ) && is_true( self.pers_upgrades_monitor[pers_upgrade + "_details"] ) )
-				pers_upgrades_monitor[pers_upgrade].stats = [];
-		}
-	}
-
-	foreach ( pers_upgrade, hudelem in pers_upgrades_monitor )
-	{
-		hudelem thread check_pers_upgrade( self, pers_upgrade );
-
-		if ( isdefined( hudelem.stats ) )
-		{
-			switch ( pers_upgrade )
 			{
-				case "multikill_headshots":
-					hudelem thread pers_check_for_pers_headshot( self );
-					break;
-				case "flopper":
-					hudelem thread pers_flopper_damage_counter( self );
-					break;
-				case "perk_lose":
-					hudelem thread pers_upgrade_perk_lose_bought( self );
-					break;
-				case "pistol_points":
-					hudelem thread pers_pistol_points_accuracy( self );
-					break;
-				case "sniper":
-					hudelem thread pers_sniper_player_fires( self );
-					break;
-				case "nube":
-					hudelem thread pers_nube_weapon_upgrade_check( self );
-					break;
-				case "board":
-				case "revive":
-				case "cash_back":
-				case "insta_kill":
-				case "jugg":
-				case "box_weapon":
-					foreach ( stat_name in level.pers_upgrades[pers_upgrade].stat_names )
-						hudelem thread check_pers_upgrade_stat( self, stat_name );
+				pers_upgrades_monitor[pers_upgrade].stats = [];
 
-					break;
+				switch ( pers_upgrade )
+				{
+					case "multikill_headshots":
+						pers_upgrades_monitor[pers_upgrade] thread pers_check_for_pers_headshot( self );
+						break;
+					case "flopper":
+						pers_upgrades_monitor[pers_upgrade] thread pers_flopper_damage_counter( self );
+						break;
+					case "perk_lose":
+						pers_upgrades_monitor[pers_upgrade] thread pers_upgrade_perk_lose_bought( self );
+						break;
+					case "pistol_points":
+						pers_upgrades_monitor[pers_upgrade] thread pers_pistol_points_accuracy( self );
+						break;
+					case "sniper":
+						pers_upgrades_monitor[pers_upgrade] thread pers_sniper_player_fires( self );
+						break;
+					case "nube":
+						pers_upgrades_monitor[pers_upgrade] thread pers_nube_weapon_upgrade_check( self );
+						break;
+					case "board":
+					case "revive":
+					case "cash_back":
+					case "insta_kill":
+					case "jugg":
+					case "box_weapon":
+						foreach ( stat_name in level.pers_upgrades[pers_upgrade].stat_names )
+							pers_upgrades_monitor[pers_upgrade] thread check_pers_upgrade_stat( self, stat_name );
+
+						break;
+				}
 			}
 		}
 	}
