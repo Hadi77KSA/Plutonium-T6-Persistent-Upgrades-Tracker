@@ -284,46 +284,46 @@ tracker_hud_positions_and_labels( pers_upgrades_monitor )
 		switch ( pers_upgrade )
 		{
 			case "board":
-				hudelem.label = &"^2board awarded: ";
+				hudelem.label = iString( "^2" + "board" + " awarded: " );
 				break;
 			case "revive":
-				hudelem.label = &"^2revive awarded: ";
+				hudelem.label = iString( "^2" + "revive" + " awarded: " );
 				break;
 			case "multikill_headshots":
-				hudelem.label = &"^2multikill_headshots awarded: ";
+				hudelem.label = iString( "^2" + "multikill_headshots" + " awarded: " );
 				break;
 			case "cash_back":
-				hudelem.label = &"^2cash_back awarded: ";
+				hudelem.label = iString( "^2" + "cash_back" + " awarded: " );
 				break;
 			case "insta_kill":
-				hudelem.label = &"^2insta_kill awarded: ";
+				hudelem.label = iString( "^2" + "insta_kill" + " awarded: " );
 				break;
 			case "jugg":
-				hudelem.label = &"^2jugg awarded: ";
+				hudelem.label = iString( "^2" + "jugg" + " awarded: " );
 				break;
 			case "carpenter":
-				hudelem.label = &"^2carpenter awarded: ";
+				hudelem.label = iString( "^2" + "carpenter" + " awarded: " );
 				break;
 			case "flopper":
-				hudelem.label = &"^2flopper awarded: ";
+				hudelem.label = iString( "^2" + "flopper" + " awarded: " );
 				break;
 			case "perk_lose":
-				hudelem.label = &"^2perk_lose awarded: ";
+				hudelem.label = iString( "^2" + "perk_lose" + " awarded: " );
 				break;
 			case "pistol_points":
-				hudelem.label = &"^2pistol_points awarded: ";
+				hudelem.label = iString( "^2" + "pistol_points" + " awarded: " );
 				break;
 			case "double_points":
-				hudelem.label = &"^2double_points awarded: ";
+				hudelem.label = iString( "^2" + "double_points" + " awarded: " );
 				break;
 			case "sniper":
-				hudelem.label = &"^2sniper awarded: ";
+				hudelem.label = iString( "^2" + "sniper" + " awarded: " );
 				break;
 			case "box_weapon":
-				hudelem.label = &"^2box_weapon awarded: ";
+				hudelem.label = iString( "^2" + "box_weapon" + " awarded: " );
 				break;
 			case "nube":
-				hudelem.label = &"^2nube awarded: ";
+				hudelem.label = iString( "^2" + "nube" + " awarded: " );
 				break;
 		}
 
@@ -340,66 +340,66 @@ tracker_hud_positions_and_labels( pers_upgrades_monitor )
 				{
 					//board
 					case "pers_boarding":
-						elem.label = &"Boards stat to obtain: ";
+						elem.label = iString( "Boards stat to obtain (" + level.pers_boarding_number_of_boards_required + ")" + ": " );
 						break;
 					//revive
 					case "pers_revivenoperk":
-						elem.label = &"Revives stat to obtain: ";
+						elem.label = iString( "Revives stat to obtain (" + level.pers_revivenoperk_number_of_revives_required + ")" + ": " );
 						break;
 					//multikill_headshots
 					case "pers_multikill_headshots":
-						elem.label = &"Multi-kill collateral headshots stat to obtain: ";
+						elem.label = iString( "Multi-kill collateral headshots stat to obtain (" + level.pers_multikill_headshots_required + ")" + ": " );
 						break;
 					case "non_headshot_kill_counter":
-						elem.label = &"Non-headshots stat to lose: ";
+						elem.label = iString( "Non-headshots stat to lose (" + level.pers_multikill_headshots_upgrade_reset_counter + ")" + ": " );
 						break;
 					//cash_back
 					case "pers_cash_back_bought":
-						elem.label = &"Perk purchases stat to obtain: ";
+						elem.label = iString( "Perk purchases stat to obtain (" + level.pers_cash_back_num_perks_required + ")" + ": " );
 						break;
 					case "pers_cash_back_prone":
-						elem.label = &"Perk purchases followed by prone stat to obtain: ";
+						elem.label = iString( "Perk purchases followed by prone stat to obtain (" + level.pers_cash_back_perk_buys_prone_required + ")" + ": " );
 						break;
 					//insta_kill
 					case "pers_insta_kill":
-						elem.label = &"No-kill insta-kills stat to obtain: ";
+						elem.label = iString( "No-kill insta-kills stat to obtain (" + level.pers_insta_kill_num_required + ")" + ": " );
 						break;
 					//jugg
 					case "pers_jugg":
-						elem.label = &"Low-round deaths stat to obtain: ";
+						elem.label = iString( "Low-round deaths stat to obtain (" + level.pers_jugg_hit_and_die_total + ")" + ": " );
 						break;
 					//flopper
 					case "pers_num_flopper_damages":
-						elem.label = &"Falls stat to obtain: ";
+						elem.label = iString( "Falls stat to obtain (" + level.pers_flopper_damage_counter + ")" + ": " );
 						break;
 					//perk_lose
 					case "pers_perk_lose_counter":
-						elem.label = &"Low-round 4-perk games stat to obtain: ";
+						elem.label = iString( "Low-round 4-perk games stat to obtain (" + level.pers_perk_lose_counter + ")" + ": " );
 						break;
 					case "pers_perk_lose_start_round":
-						elem.label = &"Lost if perk purchased on round: ";
+						elem.label = iString( "Lost if perk purchased on round: " );
 						break;
 					//pistol_points
 					case "accuracy":
-						elem.label = &"Accuracy stat: ";
+						elem.label = iString( "Accuracy stat (<=" + level.pers_pistol_points_accuracy + ")" + ": " );
 						break;
 					//sniper
 					case "pers_sniper_kills":
-						elem.label = &"Long-range sniper round kills stat to obtain: ";
+						elem.label = iString( "Long-range sniper round kills stat to obtain (>=" + level.pers_sniper_round_kills_counter + ")" + ": " );
 						break;
 					case "num_sniper_misses":
-						elem.label = &"Sniper misses stat to lose: ";
+						elem.label = iString( "Sniper misses stat to lose (" + level.pers_sniper_misses + ")" + ": " );
 						break;
 					//box_weapon
 					case "pers_box_weapon_counter":
-						elem.label = &"Weapons accepted in a row stat to obtain: ";
+						elem.label = iString( "Weapons accepted in a row stat to obtain (" + level.pers_box_weapon_counter + ")" + ": " );
 						break;
 					//nube
 					case "pers_max_round_reached":
-						elem.label = &"Maximum round completed stat: ";
+						elem.label = iString( "Maximum round completed stat (<" + level.pers_nube_lose_round + ")" + ": " );
 						break;
 					case "pers_num_nube_kills":
-						elem.label = &"Nube kills stat: ";
+						elem.label = iString( "Nube kills stat (>=" + level.pers_numb_num_kills_unlock + ")" + ": " );
 						break;
 				}
 
