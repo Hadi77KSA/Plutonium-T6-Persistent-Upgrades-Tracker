@@ -401,7 +401,7 @@ remove_tracker_hud( hud )
 	array2 = [];
 
 	foreach ( elem in array1 )
-		array2 = maps\mp\_utility::combinearrays( array2, elem.upgrade_stats );
+		array2 = maps\mp\_utility::combinearrays( array2, elem.stats );
 
 	array = maps\mp\_utility::combinearrays( array1, array2 );
 
