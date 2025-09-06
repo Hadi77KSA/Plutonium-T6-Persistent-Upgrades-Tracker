@@ -411,6 +411,7 @@ tracker_hud_positions_and_labels( pers_upgrades_monitor )
 
 remove_tracker_hud_think( hud )
 {
+	self endon( "custom_pers_upgrades_hud_off" );
 	waittill_any_ents_two( self, "disconnect", level, "end_game" );
 	remove_tracker_hud( hud );
 }
