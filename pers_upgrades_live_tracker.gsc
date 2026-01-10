@@ -1,10 +1,22 @@
+#define USE_CHAT_COMMANDS 0
+
 #include common_scripts\utility;
 #include maps\mp\gametypes_zm\_hud_util;
+
+#if USE_CHAT_COMMANDS == 1
+#include scripts\chat_commands;
+#endif
 
 init()
 {
 	if ( maps\mp\zombies\_zm_pers_upgrades::is_pers_system_active() )
+	{
+#if USE_CHAT_COMMANDS == 1
+		CreateCommand( level.chat_commands["ports"], "put_hud", "function", ::tracker_hud_command );
+		CreateCommand( level.chat_commands["ports"], "put_elem", "function", ::tracker_hud_elements_command );
+#endif
 		level thread onPlayerConnect();
+	}
 }
 
 onPlayerConnect()
@@ -61,18 +73,31 @@ msg()
 {
 	self endon( "disconnect" );
 	flag_wait( "initial_players_connected" );
+#if USE_CHAT_COMMANDS == 1
+	self iPrintLn( "^2Persistent Upgrades Tracker ^5mod by ^6Hadi77KSA" );
+#else
 	self iPrintLn( "^3Persistent Upgrades Tracker ^5mod by ^6Hadi77KSA" );
+#endif
 }
 
 pers_upgrades_monitor()
 {
 	level endon( "end_game" );
 	self endon( "disconnect" );
+#if USE_CHAT_COMMANDS == 1
+	self endon( "custom_pers_upgrades_hud_off" );
+#endif
 
 	if ( level.intermission || !( isdefined( level.pers_upgrades_keys ) && level.pers_upgrades_keys.size > 0 ) )
 		return;
 
 	flag_wait( "initial_blackscreen_passed" );
+#if USE_CHAT_COMMANDS == 1
+	if ( is_true( self.pers_upgrades_tracker_hud_running ) )
+		return;
+
+	self.pers_upgrades_tracker_hud_running = 1;
+#endif
 	pers_upgrades_monitor = [];
 
 	foreach ( pers_upgrade in level.pers_upgrades_keys )
@@ -122,6 +147,9 @@ pers_upgrades_monitor()
 	}
 
 	tracker_hud_positions_and_labels( pers_upgrades_monitor );
+#if USE_CHAT_COMMANDS == 1
+	self thread on_tracker_hud_toggle_off( pers_upgrades_monitor );
+#endif
 	self thread remove_tracker_hud_think( pers_upgrades_monitor );
 }
 
@@ -129,6 +157,9 @@ check_pers_upgrade( player, pers_upgrade )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
+#if USE_CHAT_COMMANDS == 1
+	player endon( "custom_pers_upgrades_hud_off" );
+#endif
 
 	for (;;)
 	{
@@ -141,6 +172,9 @@ check_pers_upgrade_stat( player, stat_name )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
+#if USE_CHAT_COMMANDS == 1
+	player endon( "custom_pers_upgrades_hud_off" );
+#endif
 	self.stats[stat_name] = player createfontstring( "small", 1 );
 
 	for (;;)
@@ -154,6 +188,9 @@ pers_check_for_pers_headshot( player )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
+#if USE_CHAT_COMMANDS == 1
+	player endon( "custom_pers_upgrades_hud_off" );
+#endif
 	self.stats["pers_multikill_headshots"] = player createfontstring( "small", 1 );
 	self.stats["non_headshot_kill_counter"] = player createfontstring( "small", 1 );
 
@@ -170,6 +207,9 @@ pers_flopper_damage_counter( player )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
+#if USE_CHAT_COMMANDS == 1
+	player endon( "custom_pers_upgrades_hud_off" );
+#endif
 	self.stats["pers_num_flopper_damages"] = player createfontstring( "small", 1 );
 
 	for (;;)
@@ -184,6 +224,9 @@ pers_upgrade_perk_lose_bought( player )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
+#if USE_CHAT_COMMANDS == 1
+	player endon( "custom_pers_upgrades_hud_off" );
+#endif
 	self.stats["pers_perk_lose_counter"] = player createfontstring( "small", 1 );
 	self.stats["pers_perk_lose_start_round"] = player createfontstring( "small", 1 );
 
@@ -201,6 +244,9 @@ pers_pistol_points_accuracy( player )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
+#if USE_CHAT_COMMANDS == 1
+	player endon( "custom_pers_upgrades_hud_off" );
+#endif
 	self.stats["accuracy"] = player createfontstring( "small", 1 );
 
 	for (;;)
@@ -215,6 +261,9 @@ pers_sniper_player_fires( player )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
+#if USE_CHAT_COMMANDS == 1
+	player endon( "custom_pers_upgrades_hud_off" );
+#endif
 	self.stats["pers_sniper_kills"] = player createfontstring( "small", 1 );
 	self.stats["num_sniper_misses"] = player createfontstring( "small", 1 );
 
@@ -231,6 +280,9 @@ pers_nube_weapon_upgrade_check( player )
 {
 	level endon( "end_game" );
 	player endon( "disconnect" );
+#if USE_CHAT_COMMANDS == 1
+	player endon( "custom_pers_upgrades_hud_off" );
+#endif
 	self.stats["pers_max_round_reached"] = player createfontstring( "small", 1 );
 	self.stats["pers_num_nube_kills"] = player createfontstring( "small", 1 );
 
@@ -391,6 +443,9 @@ tracker_hud_positions_and_labels( pers_upgrades_monitor )
 
 remove_tracker_hud_think( hud )
 {
+#if USE_CHAT_COMMANDS == 1
+	self endon( "custom_pers_upgrades_hud_off" );
+#endif
 	waittill_any_ents_two( self, "disconnect", level, "end_game" );
 	remove_tracker_hud( hud );
 }
@@ -429,3 +484,115 @@ hud_removechild_from_hud_parent( element )
 	self.children[self.children.size - 1] = undefined;
 	element.index = undefined;
 }
+
+#if USE_CHAT_COMMANDS == 1
+on_tracker_hud_toggle_off( hud )
+{
+	level endon( "end_game" );
+	self endon( "disconnect" );
+	self waittill( "custom_tracker_hud_toggle_off" );
+	self notify( "custom_pers_upgrades_hud_off" );
+	remove_tracker_hud( hud );
+	self.pers_upgrades_tracker_hud_running = 0;
+}
+
+tracker_hud_command(args)
+{
+	if (args.size < 1)
+	{
+		return NotEnoughArgsError(1);
+	}
+
+	error = self toggle_tracker_hud(args[0]);
+
+	if (IsDefined(error))
+	{
+		return error;
+	}
+}
+
+toggle_tracker_hud( toggle )
+{
+	if ( !isinarray( array( "1", "on", "0", "off" ), toLower( toggle ) ) )
+	{
+		error = array( "Invalid input", GetDvar("cc_prefix") + "put_hud" + " only accepts:", "'1' or 'on' to enable", "'0' or 'off' to disable" );
+		return error;
+	}
+	else if ( isinarray( array( "0", "off" ), toLower( toggle ) ) )
+	{
+		if ( !is_true( self.pers_upgrades_tracker_hud_running ) )
+		{
+			error = array( "Error:", GetDvar("cc_prefix") + "put_hud" + " is already off" );
+			return error;
+		}
+
+		self notify( "custom_tracker_hud_toggle_off" );
+	}
+	else //if ( isinarray( array( "1", "on" ), toLower( toggle ) ) )
+	{
+		if ( is_true( self.pers_upgrades_tracker_hud_running ) )
+		{
+			error = array( "Error:", GetDvar("cc_prefix") + "put_hud" + " is already on" );
+			return error;
+		}
+
+		self thread pers_upgrades_monitor();
+	}
+}
+
+tracker_hud_elements_command(args)
+{
+	if (args.size < 2)
+	{
+		return NotEnoughArgsError(2);
+	}
+
+	error = self toggle_tracker_hud_elements(args[0], args[1]);
+
+	if (IsDefined(error))
+	{
+		return error;
+	}
+}
+
+toggle_tracker_hud_elements( var, toggle )
+{
+	if ( !isinarray( getArrayKeys( self.pers_upgrades_monitor ), toLower( var ) ) )
+	{
+		error = array( "Invalid input", GetDvar("cc_prefix") + "put_elem" + " could not find " + toLower( var ) );
+		return error;
+	}
+
+	if ( !isinarray( array( "1", "on", "0", "off" ), toLower( toggle ) ) )
+	{
+		error = array( "Invalid input", GetDvar("cc_prefix") + "put_elem" + " " + toLower( var ) + " only accepts:", "'1' or 'on' to enable", "'0' or 'off' to disable" );
+		return error;
+	}
+	else if ( isinarray( array( "0", "off" ), toLower( toggle ) ) )
+	{
+		if ( self.pers_upgrades_monitor[var] == 0 )
+		{
+			error = array( "Error:", var + " is already off" );
+			return error;
+		}
+
+		self.pers_upgrades_monitor[var] = 0;
+		self notify( "custom_tracker_hud_toggle_off" );
+		wait 0.05;
+		self thread pers_upgrades_monitor();
+	}
+	else //if ( isinarray( array( "1", "on" ), toLower( toggle ) ) )
+	{
+		if ( self.pers_upgrades_monitor[var] == 1 )
+		{
+			error = array( "Error:", var + " is already on" );
+			return error;
+		}
+
+		self.pers_upgrades_monitor[var] = 1;
+		self notify( "custom_tracker_hud_toggle_off" );
+		wait 0.05;
+		self thread pers_upgrades_monitor();
+	}
+}
+#endif
